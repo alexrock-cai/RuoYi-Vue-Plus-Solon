@@ -1,6 +1,6 @@
 package org.dromara.system.mapper;
 
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.mybatisflex.core.query.QueryWrapper;
 import org.dromara.common.mybatis.core.mapper.BaseMapperPlus;
 import org.dromara.system.domain.SysRoleMenu;
 

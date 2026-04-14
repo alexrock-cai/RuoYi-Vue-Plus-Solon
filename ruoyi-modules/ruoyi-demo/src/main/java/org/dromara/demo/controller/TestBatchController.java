@@ -1,6 +1,6 @@
 package org.dromara.demo.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.mybatisflex.core.query.QueryWrapper;
 import org.dromara.common.core.domain.R;
 import org.dromara.common.web.core.BaseController;
 import org.dromara.demo.domain.TestDemo;
@@ -36,7 +36,7 @@ public class TestBatchController extends BaseController {
      * 3.5.0 版本 增加 rewriteBatchedStatements=true 批处理参数 使 MP 原生批处理可以达到同样的速度
      */
     @PostMapping("/add")
-//    @DS("slave")
+//    @UseDataSource("slave")
     public R<Void> add() {
         List<TestDemo> list = new ArrayList<>();
         for (int i = 0; i < 1000; i++) {
@@ -55,7 +55,7 @@ public class TestBatchController extends BaseController {
      * 3.5.0 版本 增加 rewriteBatchedStatements=true 批处理参数 使 MP 原生批处理可以达到同样的速度
      */
     @PostMapping("/addOrUpdate")
-//    @DS("slave")
+//    @UseDataSource("slave")
     public R<Void> addOrUpdate() {
         List<TestDemo> list = new ArrayList<>();
         for (int i = 0; i < 1000; i++) {
@@ -81,7 +81,7 @@ public class TestBatchController extends BaseController {
      * 删除批量方法
      */
     @DeleteMapping()
-//    @DS("slave")
+//    @UseDataSource("slave")
     public R<Void> remove() {
         return toAjax(testDemoMapper.delete(new LambdaQueryWrapper<TestDemo>()
             .eq(TestDemo::getOrderNum, -1L)));

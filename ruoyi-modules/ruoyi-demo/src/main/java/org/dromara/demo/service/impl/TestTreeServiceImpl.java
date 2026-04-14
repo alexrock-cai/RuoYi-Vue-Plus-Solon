@@ -1,7 +1,7 @@
 package org.dromara.demo.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.mybatisflex.core.query.QueryWrapper;
+
 import lombok.RequiredArgsConstructor;
 import org.dromara.common.core.utils.MapstructUtils;
 import org.dromara.common.core.utils.StringUtils;
@@ -22,7 +22,7 @@ import java.util.Map;
  * @author Lion Li
  * @date 2021-07-26
  */
-// @DS("slave") // 切换从库查询
+// @UseDataSource("slave") // 切换从库查询
 @RequiredArgsConstructor
 @Service
 public class TestTreeServiceImpl implements ITestTreeService {
@@ -34,7 +34,7 @@ public class TestTreeServiceImpl implements ITestTreeService {
         return baseMapper.selectVoById(id);
     }
 
-    // @DS("slave") // 切换从库查询
+    // @UseDataSource("slave") // 切换从库查询
     @Override
     public List<TestTreeVo> queryList(TestTreeBo bo) {
         LambdaQueryWrapper<TestTree> lqw = buildQueryWrapper(bo);

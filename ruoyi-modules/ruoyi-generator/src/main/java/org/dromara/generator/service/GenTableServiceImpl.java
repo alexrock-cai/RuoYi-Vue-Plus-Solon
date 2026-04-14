@@ -4,12 +4,12 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.ObjectUtil;
-import com.baomidou.dynamic.datasource.annotation.DS;
+import com.mybatisflex.annotation.UseDataSource;
 import com.baomidou.dynamic.datasource.annotation.DSTransactional;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.core.query.QueryWrapper;
+
+import com.mybatisflex.core.paginate.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.anyline.metadata.Column;
@@ -115,7 +115,7 @@ public class GenTableServiceImpl implements IGenTableService {
      * @param pageQuery 包含分页信息的PageQuery对象
      * @return 包含分页结果的TableDataInfo对象
      */
-    @DS("#genTable.dataName")
+    @UseDataSource("#genTable.dataName")
     @Override
     public TableDataInfo<GenTable> selectPageDbTableList(GenTable genTable, PageQuery pageQuery) {
         // 获取查询条件
@@ -176,7 +176,7 @@ public class GenTableServiceImpl implements IGenTableService {
      * @param dataName   数据源名称
      * @return 数据库表集合
      */
-    @DS("#dataName")
+    @UseDataSource("#dataName")
     @Override
     public List<GenTable> selectDbTableListByNames(String[] tableNames, String dataName) {
         Set<String> tableNameSet = new HashSet<>(List.of(tableNames));
@@ -285,7 +285,7 @@ public class GenTableServiceImpl implements IGenTableService {
      * @param dataName  数据源名称
      * @return 列信息
      */
-    @DS("#dataName")
+    @UseDataSource("#dataName")
     @Override
     public List<GenTableColumn> selectDbTableColumnsByName(String tableName, String dataName) {
         Table<?> table = ServiceProxy.metadata().table(tableName);
