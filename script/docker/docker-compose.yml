@@ -130,18 +130,6 @@ services:
     privileged: true
     network_mode: "host"
 
-  ruoyi-monitor-admin:
-    image: ruoyi/ruoyi-monitor-admin:5.6.0
-    container_name: ruoyi-monitor-admin
-    environment:
-      # 时区上海
-      TZ: Asia/Shanghai
-    volumes:
-      # 配置文件
-      - /docker/monitor/logs/:/ruoyi/monitor/logs
-    privileged: true
-    network_mode: "host"
-
   ruoyi-snailjob-server:
     image: ruoyi/ruoyi-snailjob-server:5.6.0
     container_name: ruoyi-snailjob-server
