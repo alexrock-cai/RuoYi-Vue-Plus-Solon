@@ -22,13 +22,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webmvc-api</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.therapi</groupId>
-            <artifactId>therapi-runtime-javadoc</artifactId>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-solon-ui</artifactId>
         </dependency>
 
         <dependency>

@@ -17,6 +17,7 @@
 
     <dependencies>
 
+        <!-- TODO: Replace with sms4j-solon-plugin when available -->
         <dependency>
             <groupId>org.dromara.sms4j</groupId>
             <artifactId>sms4j-spring-boot-starter</artifactId>
