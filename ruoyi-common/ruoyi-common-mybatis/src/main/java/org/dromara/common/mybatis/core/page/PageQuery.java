@@ -1,10 +1,8 @@
 package org.dromara.common.mybatis.core.page;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mybatisflex.core.paginate.Page;
 import lombok.Data;
 import org.dromara.common.core.exception.ServiceException;
 import org.dromara.common.core.utils.StringUtils;
@@ -12,8 +10,6 @@ import org.dromara.common.core.utils.sql.SqlUtil;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 分页查询实体类
@@ -65,16 +61,11 @@ public class PageQuery implements Serializable {
         if (pageNum <= 0) {
             pageNum = DEFAULT_PAGE_NUM;
         }
-        Page<T> page = new Page<>(pageNum, pageSize);
-        List<OrderItem> orderItems = buildOrderItem();
-        if (CollUtil.isNotEmpty(orderItems)) {
-            page.addOrder(orderItems);
-        }
-        return page;
+        return new Page<>(pageNum, pageSize);
     }
 
     /**
-     * 构建排序
+     * 构建排序字符串
      *
      * 支持的用法如下:
      * {isAsc:"asc",orderByColumn:"id"} order by id asc
@@ -82,36 +73,31 @@ public class PageQuery implements Serializable {
      * {isAsc:"desc",orderByColumn:"id,createTime"} order by id desc,create_time desc
      * {isAsc:"asc,desc",orderByColumn:"id,createTime"} order by id asc,create_time desc
      */
-    private List<OrderItem> buildOrderItem() {
+    public String buildOrderBy() {
         if (StringUtils.isBlank(orderByColumn) || StringUtils.isBlank(isAsc)) {
             return null;
         }
         String orderBy = SqlUtil.escapeOrderBySql(orderByColumn);
         orderBy = StringUtils.toUnderScoreCase(orderBy);
-
-        // 兼容前端排序类型
         isAsc = StringUtils.replaceEach(isAsc, new String[]{"ascending", "descending"}, new String[]{"asc", "desc"});
-
         String[] orderByArr = orderBy.split(StringUtils.SEPARATOR);
         String[] isAscArr = isAsc.split(StringUtils.SEPARATOR);
         if (isAscArr.length != 1 && isAscArr.length != orderByArr.length) {
             throw new ServiceException("排序参数有误");
         }
-
-        List<OrderItem> list = new ArrayList<>();
-        // 每个字段各自排序
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < orderByArr.length; i++) {
-            String orderByStr = orderByArr[i];
-            String isAscStr = isAscArr.length == 1 ? isAscArr[0] : isAscArr[i];
-            if ("asc".equals(isAscStr)) {
-                list.add(OrderItem.asc(orderByStr));
-            } else if ("desc".equals(isAscStr)) {
-                list.add(OrderItem.desc(orderByStr));
-            } else {
+            String col = orderByArr[i];
+            String dir = isAscArr.length == 1 ? isAscArr[0] : isAscArr[i];
+            if (!"asc".equals(dir) && !"desc".equals(dir)) {
                 throw new ServiceException("排序参数有误");
             }
+            if (sb.length() > 0) {
+                sb.append(", ");
+            }
+            sb.append(col).append(" ").append(dir);
         }
-        return list;
+        return sb.toString();
     }
 
     @JsonIgnore

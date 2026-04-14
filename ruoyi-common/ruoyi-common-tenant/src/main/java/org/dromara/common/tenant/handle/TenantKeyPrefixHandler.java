@@ -1,6 +1,5 @@
 package org.dromara.common.tenant.handle;
 
-import com.baomidou.mybatisplus.core.plugins.InterceptorIgnoreHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.common.core.constant.GlobalConstants;
 import org.dromara.common.core.utils.StringUtils;
@@ -27,12 +26,8 @@ public class TenantKeyPrefixHandler extends KeyPrefixHandler {
         if (StringUtils.isBlank(name)) {
             return null;
         }
-        try {
-            if (InterceptorIgnoreHelper.willIgnoreTenantLine("")) {
-                return super.map(name);
-            }
-        } catch (NoClassDefFoundError ignore) {
-            // 有些服务不需要mp导致类不存在 忽略即可
+        if (TenantHelper.isIgnore()) {
+            return super.map(name);
         }
         if (StringUtils.contains(name, GlobalConstants.GLOBAL_REDIS_KEY)) {
             return super.map(name);
@@ -58,12 +53,8 @@ public class TenantKeyPrefixHandler extends KeyPrefixHandler {
         if (StringUtils.isBlank(unmap)) {
             return null;
         }
-        try {
-            if (InterceptorIgnoreHelper.willIgnoreTenantLine("")) {
-                return unmap;
-            }
-        } catch (NoClassDefFoundError ignore) {
-            // 有些服务不需要mp导致类不存在 忽略即可
+        if (TenantHelper.isIgnore()) {
+            return unmap;
         }
         if (StringUtils.contains(name, GlobalConstants.GLOBAL_REDIS_KEY)) {
             return unmap;
