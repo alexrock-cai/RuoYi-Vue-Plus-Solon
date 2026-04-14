@@ -26,8 +26,6 @@ public class DataPermissionHelper {
 
     private static final ThreadLocal<Stack<Integer>> REENTRANT_IGNORE = ThreadLocal.withInitial(Stack::new);
 
-    private static final ThreadLocal<Boolean> IGNORE_FLAG = ThreadLocal.withInitial(() -> false);
-
     private static final ThreadLocal<DataPermission> PERMISSION_CACHE = new ThreadLocal<>();
 
     public static DataPermission getPermission() {
@@ -43,7 +41,7 @@ public class DataPermissionHelper {
     }
 
     public static boolean isIgnore() {
-        return Boolean.TRUE.equals(IGNORE_FLAG.get());
+        return !REENTRANT_IGNORE.get().isEmpty();
     }
 
     public static <T> T getVariable(String key) {
@@ -70,17 +68,14 @@ public class DataPermissionHelper {
     }
 
     private static void enableIgnore() {
-        IGNORE_FLAG.set(true);
         Stack<Integer> reentrantStack = REENTRANT_IGNORE.get();
         reentrantStack.push(reentrantStack.size() + 1);
     }
 
     private static void disableIgnore() {
         Stack<Integer> reentrantStack = REENTRANT_IGNORE.get();
-        boolean empty = reentrantStack.isEmpty() || reentrantStack.pop() == 1;
-        if (empty) {
-            IGNORE_FLAG.set(false);
-            IGNORE_FLAG.remove();
+        if (!reentrantStack.isEmpty()) {
+            reentrantStack.pop();
         }
     }
 
