@@ -87,7 +87,7 @@ public interface SysMenuMapper extends BaseMapperPlus<SysMenu, SysMenuVo> {
      */
     default Set<String> selectMenuPermsByUserId(Long userId) {
         List<String> list = this.selectObjs(
-            new LambdaQueryWrapper<SysMenu>()
+            QueryWrapper.create()
                 .select(SysMenu::getPerms)
                 .inSql(SysMenu::getMenuId, this.buildMenuByUserSql(userId))
                 .isNotNull(SysMenu::getPerms)
@@ -103,7 +103,7 @@ public interface SysMenuMapper extends BaseMapperPlus<SysMenu, SysMenuVo> {
      */
     default Set<String> selectMenuPermsByRoleId(Long roleId) {
         List<String> list = this.selectObjs(
-            new LambdaQueryWrapper<SysMenu>()
+            QueryWrapper.create()
                 .select(SysMenu::getPerms)
                 .inSql(SysMenu::getMenuId, this.buildMenuByRoleSql(roleId))
                 .isNotNull(SysMenu::getPerms)
@@ -117,7 +117,7 @@ public interface SysMenuMapper extends BaseMapperPlus<SysMenu, SysMenuVo> {
      * @return 菜单列表
      */
     default List<SysMenu> selectMenuTreeAll() {
-        LambdaQueryWrapper<SysMenu> lqw = new LambdaQueryWrapper<SysMenu>()
+        QueryWrapper lqw = QueryWrapper.create()
             .in(SysMenu::getMenuType, SystemConstants.TYPE_DIR, SystemConstants.TYPE_MENU)
             .eq(SysMenu::getStatus, SystemConstants.NORMAL)
             .orderByAsc(SysMenu::getParentId)
@@ -133,7 +133,7 @@ public interface SysMenuMapper extends BaseMapperPlus<SysMenu, SysMenuVo> {
      * @return 选中菜单列表
      */
     default List<Long> selectMenuListByRoleId(Long roleId, boolean menuCheckStrictly) {
-        LambdaQueryWrapper<SysMenu> wrapper = new LambdaQueryWrapper<>();
+        QueryWrapper wrapper = QueryWrapper.create();
         wrapper.select(SysMenu::getMenuId)
             .inSql(SysMenu::getMenuId, buildMenuByRoleSql(roleId))
             .orderByAsc(SysMenu::getParentId)

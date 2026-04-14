@@ -16,8 +16,8 @@ import org.dromara.system.domain.vo.SysOperLogVo;
 import org.dromara.system.mapper.SysOperLogMapper;
 import org.dromara.system.service.ISysOperLogService;
 import org.springframework.context.event.EventListener;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
+import org.noear.solon.annotation.Async;
+import org.noear.solon.annotation.Component;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -58,7 +58,7 @@ public class SysOperLogServiceImpl implements ISysOperLogService {
      */
     @Override
     public TableDataInfo<SysOperLogVo> selectPageOperLogList(SysOperLogBo operLog, PageQuery pageQuery) {
-        LambdaQueryWrapper<SysOperLog> lqw = buildQueryWrapper(operLog);
+        QueryWrapper lqw = buildQueryWrapper(operLog);
         if (StringUtils.isBlank(pageQuery.getOrderByColumn())) {
             lqw.orderByDesc(SysOperLog::getOperId);
         }
@@ -66,9 +66,9 @@ public class SysOperLogServiceImpl implements ISysOperLogService {
         return TableDataInfo.build(page);
     }
 
-    private LambdaQueryWrapper<SysOperLog> buildQueryWrapper(SysOperLogBo operLog) {
+    private QueryWrapper buildQueryWrapper(SysOperLogBo operLog) {
         Map<String, Object> params = operLog.getParams();
-        return new LambdaQueryWrapper<SysOperLog>()
+        return QueryWrapper.create()
             .like(StringUtils.isNotBlank(operLog.getOperIp()), SysOperLog::getOperIp, operLog.getOperIp())
             .like(StringUtils.isNotBlank(operLog.getTitle()), SysOperLog::getTitle, operLog.getTitle())
             .eq(operLog.getBusinessType() != null && operLog.getBusinessType() > 0,
@@ -105,7 +105,7 @@ public class SysOperLogServiceImpl implements ISysOperLogService {
      */
     @Override
     public List<SysOperLogVo> selectOperLogList(SysOperLogBo operLog) {
-        LambdaQueryWrapper<SysOperLog> lqw = buildQueryWrapper(operLog);
+        QueryWrapper lqw = buildQueryWrapper(operLog);
         return baseMapper.selectVoList(lqw.orderByDesc(SysOperLog::getOperId));
     }
 
@@ -136,6 +136,6 @@ public class SysOperLogServiceImpl implements ISysOperLogService {
      */
     @Override
     public void cleanOperLog() {
-        baseMapper.delete(new LambdaQueryWrapper<>());
+        baseMapper.delete(QueryWrapper.create());
     }
 }

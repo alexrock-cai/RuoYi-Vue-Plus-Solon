@@ -16,7 +16,7 @@ import org.dromara.warm.flow.orm.entity.FlowDefinition;
 import org.dromara.workflow.common.ConditionalOnEnable;
 import org.dromara.workflow.domain.vo.FlowDefinitionVo;
 import org.dromara.workflow.service.IFlwDefinitionService;
-import org.springframework.transaction.annotation.Transactional;
+import org.noear.solon.annotation.Tran;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -82,7 +82,7 @@ public class FlwDefinitionController extends BaseController {
     @Log(title = "流程定义", businessType = BusinessType.INSERT)
     @PostMapping
     @RepeatSubmit()
-    @Transactional(rollbackFor = Exception.class)
+    @Tran(rollbackFor = Exception.class)
     @SaCheckPermission("workflow:definition:add")
     public R<Boolean> add(@RequestBody FlowDefinition flowDefinition) {
         return R.ok(defService.checkAndSave(flowDefinition));
@@ -96,7 +96,7 @@ public class FlwDefinitionController extends BaseController {
     @Log(title = "流程定义", businessType = BusinessType.UPDATE)
     @PutMapping
     @RepeatSubmit()
-    @Transactional(rollbackFor = Exception.class)
+    @Tran(rollbackFor = Exception.class)
     @SaCheckPermission("workflow:definition:edit")
     public R<Boolean> edit(@RequestBody FlowDefinition flowDefinition) {
         return R.ok(defService.updateById(flowDefinition));
@@ -123,7 +123,7 @@ public class FlwDefinitionController extends BaseController {
     @Log(title = "流程定义", businessType = BusinessType.INSERT)
     @PutMapping("/unPublish/{id}")
     @RepeatSubmit()
-    @Transactional(rollbackFor = Exception.class)
+    @Tran(rollbackFor = Exception.class)
     @SaCheckPermission("workflow:definition:publish")
     public R<Boolean> unPublish(@PathVariable Long id) {
         return R.ok(defService.unPublish(id));
@@ -147,7 +147,7 @@ public class FlwDefinitionController extends BaseController {
     @Log(title = "流程定义", businessType = BusinessType.INSERT)
     @PostMapping("/copy/{id}")
     @RepeatSubmit()
-    @Transactional(rollbackFor = Exception.class)
+    @Tran(rollbackFor = Exception.class)
     @SaCheckPermission("workflow:definition:copy")
     public R<Boolean> copy(@PathVariable Long id) {
         return R.ok(defService.copyDef(id));
@@ -199,7 +199,7 @@ public class FlwDefinitionController extends BaseController {
      */
     @RepeatSubmit()
     @PutMapping("/active/{id}")
-    @Transactional(rollbackFor = Exception.class)
+    @Tran(rollbackFor = Exception.class)
     @Log(title = "流程定义", businessType = BusinessType.UPDATE)
     @SaCheckPermission("workflow:definition:active")
     public R<Boolean> active(@PathVariable Long id, @RequestParam boolean active) {

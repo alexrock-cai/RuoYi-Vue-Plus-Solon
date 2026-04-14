@@ -10,7 +10,7 @@ import org.dromara.demo.domain.bo.TestTreeBo;
 import org.dromara.demo.domain.vo.TestTreeVo;
 import org.dromara.demo.mapper.TestTreeMapper;
 import org.dromara.demo.service.ITestTreeService;
-import org.springframework.stereotype.Service;
+import org.noear.solon.annotation.Component;
 
 import java.util.Collection;
 import java.util.List;
@@ -37,13 +37,13 @@ public class TestTreeServiceImpl implements ITestTreeService {
     // @UseDataSource("slave") // 切换从库查询
     @Override
     public List<TestTreeVo> queryList(TestTreeBo bo) {
-        LambdaQueryWrapper<TestTree> lqw = buildQueryWrapper(bo);
+        QueryWrapper lqw = buildQueryWrapper(bo);
         return baseMapper.selectVoList(lqw);
     }
 
-    private LambdaQueryWrapper<TestTree> buildQueryWrapper(TestTreeBo bo) {
+    private QueryWrapper buildQueryWrapper(TestTreeBo bo) {
         Map<String, Object> params = bo.getParams();
-        LambdaQueryWrapper<TestTree> lqw = Wrappers.lambdaQuery();
+        QueryWrapper lqw = Wrappers.lambdaQuery();
         lqw.eq(bo.getDeptId() != null, TestTree::getDeptId, bo.getDeptId());
         lqw.eq(bo.getUserId() != null, TestTree::getUserId, bo.getUserId());
         lqw.like(StringUtils.isNotBlank(bo.getTreeName()), TestTree::getTreeName, bo.getTreeName());

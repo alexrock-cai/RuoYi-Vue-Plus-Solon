@@ -7,7 +7,7 @@ import org.dromara.common.translation.core.handler.TranslationBeanSerializerModi
 import org.dromara.common.translation.core.handler.TranslationHandler;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.inject.Inject;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 
 import java.util.HashMap;
@@ -23,10 +23,10 @@ import java.util.Map;
 @AutoConfiguration
 public class TranslationConfig {
 
-    @Autowired
+    @Inject
     private List<TranslationInterface<?>> list;
 
-    @Autowired
+    @Inject
     private ObjectMapper objectMapper;
 
     @PostConstruct

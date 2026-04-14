@@ -58,7 +58,7 @@ public interface SysPostMapper extends BaseMapperPlus<SysPost, SysPostVo> {
         @DataColumn(key = "userName", value = "create_by")
     })
     default long selectPostCount(List<Long> postIds) {
-        return this.selectCount(new LambdaQueryWrapper<SysPost>().in(SysPost::getPostId, postIds));
+        return this.selectCount(QueryWrapper.create().in(SysPost::getPostId, postIds));
     }
 
     /**
@@ -68,7 +68,7 @@ public interface SysPostMapper extends BaseMapperPlus<SysPost, SysPostVo> {
      * @return 岗位信息列表
      */
     default List<SysPostVo> selectPostsByUserId(Long userId) {
-        return this.selectVoList(new LambdaQueryWrapper<SysPost>()
+        return this.selectVoList(QueryWrapper.create()
             .inSql(SysPost::getPostId, "select post_id from sys_user_post where user_id = " + userId));
     }
 

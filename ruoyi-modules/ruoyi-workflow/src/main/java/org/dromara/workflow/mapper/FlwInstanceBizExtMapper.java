@@ -23,7 +23,7 @@ public interface FlwInstanceBizExtMapper extends BaseMapperPlus<FlowInstanceBizE
      */
     default int saveOrUpdateByInstanceId(FlowInstanceBizExt entity) {
         // 查询是否存在
-        FlowInstanceBizExt exist = this.selectOne(new LambdaQueryWrapper<FlowInstanceBizExt>()
+        FlowInstanceBizExt exist = this.selectOne(QueryWrapper.create()
             .eq(FlowInstanceBizExt::getInstanceId, entity.getInstanceId()));
 
         if (ObjectUtil.isNotNull(exist)) {
@@ -43,7 +43,7 @@ public interface FlwInstanceBizExtMapper extends BaseMapperPlus<FlowInstanceBizE
      * @return 删除的行数
      */
     default int deleteByInstId(Long instanceId) {
-        return this.delete(new LambdaQueryWrapper<FlowInstanceBizExt>()
+        return this.delete(QueryWrapper.create()
             .eq(FlowInstanceBizExt::getInstanceId, instanceId));
     }
 
@@ -54,7 +54,7 @@ public interface FlwInstanceBizExtMapper extends BaseMapperPlus<FlowInstanceBizE
      * @return 删除的行数
      */
     default int deleteByInstIds(List<Long> instanceIds) {
-        return this.delete(new LambdaQueryWrapper<FlowInstanceBizExt>()
+        return this.delete(QueryWrapper.create()
             .in(FlowInstanceBizExt::getInstanceId, instanceIds));
     }
 

@@ -98,7 +98,7 @@ public interface SysUserMapper extends BaseMapperPlus<SysUser, SysUserVo> {
         @DataColumn(key = "userName", value = "create_by")
     })
     default long countUserById(Long userId) {
-        return this.selectCount(new LambdaQueryWrapper<SysUser>().eq(SysUser::getUserId, userId));
+        return this.selectCount(QueryWrapper.create().eq(SysUser::getUserId, userId));
     }
 
     /**

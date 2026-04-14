@@ -83,7 +83,7 @@ public class TestBatchController extends BaseController {
     @DeleteMapping()
 //    @UseDataSource("slave")
     public R<Void> remove() {
-        return toAjax(testDemoMapper.delete(new LambdaQueryWrapper<TestDemo>()
+        return toAjax(testDemoMapper.delete(QueryWrapper.create()
             .eq(TestDemo::getOrderNum, -1L)));
     }
 

@@ -20,7 +20,7 @@ public interface SysUserRoleMapper extends BaseMapperPlus<SysUserRole, SysUserRo
      * @return 关联到指定角色的用户ID列表
      */
     default List<Long> selectUserIdsByRoleId(Long roleId) {
-        return this.selectObjs(new LambdaQueryWrapper<SysUserRole>()
+        return this.selectObjs(QueryWrapper.create()
             .select(SysUserRole::getUserId).eq(SysUserRole::getRoleId, roleId)
         );
     }

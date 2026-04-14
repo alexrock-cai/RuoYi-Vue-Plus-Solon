@@ -6,7 +6,7 @@ import org.dromara.common.redis.manager.PlusSpringCacheManager;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.context.annotation.Bean;
+import org.noear.solon.annotation.Bean;
 
 import java.util.concurrent.TimeUnit;
 

@@ -47,8 +47,8 @@ import org.dromara.workflow.mapper.FlwCategoryMapper;
 import org.dromara.workflow.mapper.FlwInstanceMapper;
 import org.dromara.workflow.service.IFlwInstanceService;
 import org.dromara.workflow.service.IFlwTaskService;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.noear.solon.annotation.Component;
+import org.noear.solon.annotation.Tran;
 
 import java.util.*;
 import java.util.function.Function;
@@ -157,7 +157,7 @@ public class FlwInstanceServiceImpl implements IFlwInstanceService {
      */
     @Override
     public FlowInstance selectInstByBusinessId(String businessId) {
-        return flowInstanceMapper.selectOne(new LambdaQueryWrapper<FlowInstance>().eq(FlowInstance::getBusinessId, businessId));
+        return flowInstanceMapper.selectOne(QueryWrapper.create().eq(FlowInstance::getBusinessId, businessId));
     }
 
     /**
@@ -186,9 +186,9 @@ public class FlwInstanceServiceImpl implements IFlwInstanceService {
      * @param businessIds 业务id
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Tran(rollbackFor = Exception.class)
     public boolean deleteByBusinessIds(List<String> businessIds) {
-        List<FlowInstance> flowInstances = flowInstanceMapper.selectList(new LambdaQueryWrapper<FlowInstance>().in(FlowInstance::getBusinessId, businessIds));
+        List<FlowInstance> flowInstances = flowInstanceMapper.selectList(QueryWrapper.create().in(FlowInstance::getBusinessId, businessIds));
         if (CollUtil.isEmpty(flowInstances)) {
             log.warn("未找到对应的流程实例信息，无法执行删除操作。");
             return false;
@@ -204,7 +204,7 @@ public class FlwInstanceServiceImpl implements IFlwInstanceService {
      * @param instanceIds 实例id
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Tran(rollbackFor = Exception.class)
     public boolean deleteByInstanceIds(List<Long> instanceIds) {
         // 获取实例信息
         List<FlowInstance> flowInstances = flowInstanceMapper.selectByIds(instanceIds);
@@ -224,7 +224,7 @@ public class FlwInstanceServiceImpl implements IFlwInstanceService {
      * @param instanceIds 实例id
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Tran(rollbackFor = Exception.class)
     public boolean deleteHisByInstanceIds(List<Long> instanceIds) {
         // 获取实例信息
         List<FlowInstance> flowInstances = flowInstanceMapper.selectByIds(instanceIds);
@@ -279,7 +279,7 @@ public class FlwInstanceServiceImpl implements IFlwInstanceService {
      * @param bo 参数
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Tran(rollbackFor = Exception.class)
     public boolean cancelProcessApply(FlowCancelBo bo) {
         Instance instance = selectInstByBusinessId(bo.getBusinessId());
         if (instance == null) {
@@ -357,7 +357,7 @@ public class FlwInstanceServiceImpl implements IFlwInstanceService {
         // 再组装历史任务（已处理任务）
         List<FlowHisTaskVo> hisTaskVos = new ArrayList<>();
         List<FlowHisTask> hisTasks = flowHisTaskMapper.selectList(
-            new LambdaQueryWrapper<FlowHisTask>()
+            QueryWrapper.create()
                 .eq(FlowHisTask::getInstanceId, instanceId)
                 .eq(FlowHisTask::getNodeType, NodeType.BETWEEN.getKey())
                 .orderByDesc(FlowHisTask::getUpdateTime)
@@ -382,7 +382,7 @@ public class FlwInstanceServiceImpl implements IFlwInstanceService {
      */
     @Override
     public void updateStatus(Long instanceId, String status) {
-        LambdaUpdateWrapper<FlowInstance> wrapper = new LambdaUpdateWrapper<>();
+        QueryWrapper wrapper = QueryWrapper.create();
         wrapper.set(FlowInstance::getFlowStatus, status);
         wrapper.eq(FlowInstance::getId, instanceId);
         flowInstanceMapper.update(wrapper);
@@ -412,7 +412,7 @@ public class FlwInstanceServiceImpl implements IFlwInstanceService {
      * @param bo 参数
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Tran(rollbackFor = Exception.class)
     public boolean updateVariable(FlowVariableBo bo) {
         FlowInstance flowInstance = flowInstanceMapper.selectById(bo.getInstanceId());
         if (flowInstance == null) {
@@ -468,7 +468,7 @@ public class FlwInstanceServiceImpl implements IFlwInstanceService {
      * @param bo 参数
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Tran(rollbackFor = Exception.class)
     public boolean processInvalid(FlowInvalidBo bo) {
         Instance instance = insService.getById(bo.getId());
         if (instance != null) {

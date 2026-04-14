@@ -14,7 +14,7 @@ import org.dromara.demo.domain.bo.TestDemoBo;
 import org.dromara.demo.domain.vo.TestDemoVo;
 import org.dromara.demo.mapper.TestDemoMapper;
 import org.dromara.demo.service.ITestDemoService;
-import org.springframework.stereotype.Service;
+import org.noear.solon.annotation.Component;
 
 import java.util.Collection;
 import java.util.List;
@@ -39,7 +39,7 @@ public class TestDemoServiceImpl implements ITestDemoService {
 
     @Override
     public TableDataInfo<TestDemoVo> queryPageList(TestDemoBo bo, PageQuery pageQuery) {
-        LambdaQueryWrapper<TestDemo> lqw = buildQueryWrapper(bo);
+        QueryWrapper lqw = buildQueryWrapper(bo);
         Page<TestDemoVo> result = baseMapper.selectVoPage(pageQuery.build(), lqw);
         return TableDataInfo.build(result);
     }
@@ -49,7 +49,7 @@ public class TestDemoServiceImpl implements ITestDemoService {
      */
     @Override
     public TableDataInfo<TestDemoVo> customPageList(TestDemoBo bo, PageQuery pageQuery) {
-        LambdaQueryWrapper<TestDemo> lqw = buildQueryWrapper(bo);
+        QueryWrapper lqw = buildQueryWrapper(bo);
         Page<TestDemoVo> result = baseMapper.customPageList(pageQuery.build(), lqw);
         return TableDataInfo.build(result);
     }
@@ -59,9 +59,9 @@ public class TestDemoServiceImpl implements ITestDemoService {
         return baseMapper.selectVoList(buildQueryWrapper(bo));
     }
 
-    private LambdaQueryWrapper<TestDemo> buildQueryWrapper(TestDemoBo bo) {
+    private QueryWrapper buildQueryWrapper(TestDemoBo bo) {
         Map<String, Object> params = bo.getParams();
-        LambdaQueryWrapper<TestDemo> lqw = Wrappers.lambdaQuery();
+        QueryWrapper lqw = Wrappers.lambdaQuery();
         lqw.eq(bo.getDeptId() != null, TestDemo::getDeptId, bo.getDeptId());
         lqw.eq(bo.getUserId() != null, TestDemo::getUserId, bo.getUserId());
         lqw.like(StringUtils.isNotBlank(bo.getTestKey()), TestDemo::getTestKey, bo.getTestKey());

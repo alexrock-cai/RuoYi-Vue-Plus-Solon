@@ -27,8 +27,8 @@ import org.dromara.system.mapper.SysRoleMapper;
 import org.dromara.system.mapper.SysRoleMenuMapper;
 import org.dromara.system.mapper.SysTenantPackageMapper;
 import org.dromara.system.service.ISysMenuService;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.noear.solon.annotation.Component;
+import org.noear.solon.annotation.Tran;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -70,7 +70,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
     @Override
     public List<SysMenuVo> selectMenuList(SysMenuBo menu, Long userId) {
         List<SysMenuVo> menuList;
-        LambdaQueryWrapper<SysMenu> wrapper = new LambdaQueryWrapper<>();
+        QueryWrapper wrapper = QueryWrapper.create();
         // 管理员显示所有菜单信息 不是管理员 按用户id过滤菜单
         if (!LoginHelper.isSuperAdmin(userId)) {
             // 通过用户id获取角色id 通过角色id获取菜单id 然后in菜单
@@ -121,7 +121,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
         if (LoginHelper.isSuperAdmin(userId)) {
             menus = baseMapper.selectMenuTreeAll();
         } else {
-            LambdaQueryWrapper<SysMenu> wrapper = new LambdaQueryWrapper<>();
+            QueryWrapper wrapper = QueryWrapper.create();
             menus = baseMapper.selectList(
                 wrapper.in(SysMenu::getMenuType, SystemConstants.TYPE_DIR, SystemConstants.TYPE_MENU)
                     .eq(SysMenu::getStatus, SystemConstants.NORMAL)
@@ -159,13 +159,13 @@ public class SysMenuServiceImpl implements ISysMenuService {
         }
         List<Long> parentIds = null;
         if (tenantPackage.getMenuCheckStrictly()) {
-            parentIds = baseMapper.selectObjs(new LambdaQueryWrapper<SysMenu>()
+            parentIds = baseMapper.selectObjs(QueryWrapper.create()
                 .select(SysMenu::getParentId)
                 .in(SysMenu::getMenuId, menuIds), x -> {
                 return Convert.toLong(x);
             });
         }
-        return baseMapper.selectObjs(new LambdaQueryWrapper<SysMenu>()
+        return baseMapper.selectObjs(QueryWrapper.create()
             .select(SysMenu::getMenuId)
             .in(SysMenu::getMenuId, menuIds)
             .notIn(CollUtil.isNotEmpty(parentIds), SysMenu::getMenuId, parentIds), x -> {
@@ -270,7 +270,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
      */
     @Override
     public boolean hasChildByMenuId(Long menuId) {
-        return baseMapper.exists(new LambdaQueryWrapper<SysMenu>().eq(SysMenu::getParentId, menuId));
+        return baseMapper.exists(QueryWrapper.create().eq(SysMenu::getParentId, menuId));
     }
 
     /**
@@ -281,7 +281,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
      */
     @Override
     public boolean hasChildByMenuId(List<Long> menuIds) {
-        return baseMapper.exists(new LambdaQueryWrapper<SysMenu>().in(SysMenu::getParentId, menuIds).notIn(SysMenu::getMenuId, menuIds));
+        return baseMapper.exists(QueryWrapper.create().in(SysMenu::getParentId, menuIds).notIn(SysMenu::getMenuId, menuIds));
     }
 
     /**
@@ -292,7 +292,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
      */
     @Override
     public boolean checkMenuExistRole(Long menuId) {
-        return roleMenuMapper.exists(new LambdaQueryWrapper<SysRoleMenu>().eq(SysRoleMenu::getMenuId, menuId));
+        return roleMenuMapper.exists(QueryWrapper.create().eq(SysRoleMenu::getMenuId, menuId));
     }
 
     /**
@@ -337,7 +337,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
      * @return 结果
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Tran(rollbackFor = Exception.class)
     public void deleteMenuById(List<Long> menuIds) {
         baseMapper.deleteByIds(menuIds);
         roleMenuMapper.deleteByMenuIds(menuIds);
@@ -351,7 +351,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
      */
     @Override
     public boolean checkMenuNameUnique(SysMenuBo menu) {
-        boolean exist = baseMapper.exists(new LambdaQueryWrapper<SysMenu>()
+        boolean exist = baseMapper.exists(QueryWrapper.create()
             .eq(SysMenu::getMenuName, menu.getMenuName())
             .eq(SysMenu::getParentId, menu.getParentId())
             .ne(ObjectUtil.isNotNull(menu.getMenuId()), SysMenu::getMenuId, menu.getMenuId()));
@@ -375,7 +375,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
         String path = menu.getPath();
         String routeName = StringUtils.isEmpty(menu.getRouteName()) ? path : menu.getRouteName();
         List<SysMenu> sysMenuList = baseMapper.selectList(
-            new LambdaQueryWrapper<SysMenu>()
+            QueryWrapper.create()
                 .in(SysMenu::getMenuType, SystemConstants.TYPE_DIR, SystemConstants.TYPE_MENU)
                 .and(w ->
                     w.eq(SysMenu::getPath, path).or().eq(SysMenu::getPath, routeName)

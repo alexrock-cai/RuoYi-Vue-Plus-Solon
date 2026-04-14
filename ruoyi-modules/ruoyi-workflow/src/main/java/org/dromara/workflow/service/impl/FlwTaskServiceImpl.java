@@ -60,8 +60,8 @@ import org.dromara.workflow.service.IFlwCommonService;
 import org.dromara.workflow.service.IFlwNodeExtService;
 import org.dromara.workflow.service.IFlwTaskAssigneeService;
 import org.dromara.workflow.service.IFlwTaskService;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.noear.solon.annotation.Component;
+import org.noear.solon.annotation.Tran;
 
 import java.util.*;
 
@@ -101,7 +101,7 @@ public class FlwTaskServiceImpl implements IFlwTaskService {
      * @param startProcessBo 启动流程参数
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Tran(rollbackFor = Exception.class)
     @Lock4j(keys = {"#startProcessBo.flowCode + #startProcessBo.businessId"})
     public StartProcessReturnDTO startWorkFlow(StartProcessBo startProcessBo) {
         String businessId = startProcessBo.getBusinessId();
@@ -120,7 +120,7 @@ public class FlwTaskServiceImpl implements IFlwTaskService {
         FlowInstanceBizExt bizExt = startProcessBo.getBizExt();
 
         // 获取已有流程实例
-        FlowInstance flowInstance = flowInstanceMapper.selectOne(new LambdaQueryWrapper<>(FlowInstance.class)
+        FlowInstance flowInstance = flowInstanceMapper.selectOne(new QueryWrapper(FlowInstance.class)
             .eq(FlowInstance::getBusinessId, businessId));
 
         if (ObjectUtil.isNotNull(flowInstance)) {
@@ -202,7 +202,7 @@ public class FlwTaskServiceImpl implements IFlwTaskService {
      * @param completeTaskBo 办理任务参数
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Tran(rollbackFor = Exception.class)
     @Lock4j(keys = {"#completeTaskBo.taskId"})
     public boolean completeTask(CompleteTaskBo completeTaskBo) {
         // 获取任务ID并查询对应的流程任务和实例信息
@@ -337,7 +337,7 @@ public class FlwTaskServiceImpl implements IFlwTaskService {
         }
         // 添加抄送人记录
         FlowHisTask flowHisTask = flowHisTaskMapper.selectList(
-            new LambdaQueryWrapper<>(FlowHisTask.class)
+            new QueryWrapper(FlowHisTask.class)
                 .eq(FlowHisTask::getTaskId, task.getId())).get(0);
         FlowNode flowNode = new FlowNode();
         flowNode.setNodeCode(flowHisTask.getTargetNodeCode());
@@ -480,7 +480,7 @@ public class FlwTaskServiceImpl implements IFlwTaskService {
      * @param bo 参数
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Tran(rollbackFor = Exception.class)
     public boolean backProcess(BackProcessBo bo) {
         Long taskId = bo.getTaskId();
         String notice = bo.getNotice();
@@ -570,7 +570,7 @@ public class FlwTaskServiceImpl implements IFlwTaskService {
      * @param bo 参数
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Tran(rollbackFor = Exception.class)
     public boolean terminationTask(FlowTerminationBo bo) {
         Long taskId = bo.getTaskId();
         Task task = taskService.getById(taskId);
@@ -596,7 +596,7 @@ public class FlwTaskServiceImpl implements IFlwTaskService {
      */
     @Override
     public List<FlowTask> selectByIdList(List<Long> taskIdList) {
-        return flowTaskMapper.selectList(new LambdaQueryWrapper<>(FlowTask.class).in(FlowTask::getId, taskIdList));
+        return flowTaskMapper.selectList(new QueryWrapper(FlowTask.class).in(FlowTask::getId, taskIdList));
     }
 
     /**
@@ -708,7 +708,7 @@ public class FlwTaskServiceImpl implements IFlwTaskService {
      */
     @Override
     public FlowHisTask selectHisTaskById(Long taskId) {
-        return flowHisTaskMapper.selectOne(new LambdaQueryWrapper<>(FlowHisTask.class).eq(FlowHisTask::getId, taskId));
+        return flowHisTaskMapper.selectOne(new QueryWrapper(FlowHisTask.class).eq(FlowHisTask::getId, taskId));
     }
 
     /**
@@ -718,7 +718,7 @@ public class FlwTaskServiceImpl implements IFlwTaskService {
      */
     @Override
     public List<FlowTask> selectByInstId(Long instanceId) {
-        return flowTaskMapper.selectList(new LambdaQueryWrapper<>(FlowTask.class).eq(FlowTask::getInstanceId, instanceId));
+        return flowTaskMapper.selectList(new QueryWrapper(FlowTask.class).eq(FlowTask::getInstanceId, instanceId));
     }
 
     /**
@@ -728,7 +728,7 @@ public class FlwTaskServiceImpl implements IFlwTaskService {
      */
     @Override
     public List<FlowTask> selectByInstIds(List<Long> instanceIds) {
-        return flowTaskMapper.selectList(new LambdaQueryWrapper<>(FlowTask.class).in(FlowTask::getInstanceId, instanceIds));
+        return flowTaskMapper.selectList(new QueryWrapper(FlowTask.class).in(FlowTask::getInstanceId, instanceIds));
     }
 
     /**
@@ -739,7 +739,7 @@ public class FlwTaskServiceImpl implements IFlwTaskService {
      */
     @Override
     public boolean isTaskEnd(Long instanceId) {
-        boolean exists = flowTaskMapper.exists(new LambdaQueryWrapper<FlowTask>().eq(FlowTask::getInstanceId, instanceId));
+        boolean exists = flowTaskMapper.exists(QueryWrapper.create().eq(FlowTask::getInstanceId, instanceId));
         return !exists;
     }
 
@@ -750,7 +750,7 @@ public class FlwTaskServiceImpl implements IFlwTaskService {
      * @param taskOperation 操作类型，委派 delegateTask、转办 transferTask、加签 addSignature、减签 reductionSignature
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Tran(rollbackFor = Exception.class)
     public boolean taskOperation(TaskOperationBo bo, String taskOperation) {
         TaskOperationEnum op = TaskOperationEnum.getByCode(taskOperation);
         if (op == null) {
@@ -843,7 +843,7 @@ public class FlwTaskServiceImpl implements IFlwTaskService {
      * @param userId     用户id
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Tran(rollbackFor = Exception.class)
     public boolean updateAssignee(List<Long> taskIdList, String userId) {
         if (CollUtil.isEmpty(taskIdList)) {
             return false;
@@ -887,7 +887,7 @@ public class FlwTaskServiceImpl implements IFlwTaskService {
      */
     @Override
     public FlowNode getByNodeCode(String nodeCode, Long definitionId) {
-        return flowNodeMapper.selectOne(new LambdaQueryWrapper<FlowNode>()
+        return flowNodeMapper.selectOne(QueryWrapper.create()
             .eq(FlowNode::getNodeCode, nodeCode)
             .eq(FlowNode::getDefinitionId, definitionId));
     }

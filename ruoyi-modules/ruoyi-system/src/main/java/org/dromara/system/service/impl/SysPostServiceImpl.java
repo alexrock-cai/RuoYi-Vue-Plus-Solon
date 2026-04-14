@@ -22,7 +22,7 @@ import org.dromara.system.mapper.SysDeptMapper;
 import org.dromara.system.mapper.SysPostMapper;
 import org.dromara.system.mapper.SysUserPostMapper;
 import org.dromara.system.service.ISysPostService;
-import org.springframework.stereotype.Service;
+import org.noear.solon.annotation.Component;
 
 import java.util.Collections;
 import java.util.List;
@@ -82,9 +82,9 @@ public class SysPostServiceImpl implements ISysPostService, PostService {
      * @param bo 查询条件对象
      * @return 构建好的查询包装器
      */
-    private LambdaQueryWrapper<SysPost> buildQueryWrapper(SysPostBo bo) {
+    private QueryWrapper buildQueryWrapper(SysPostBo bo) {
         Map<String, Object> params = bo.getParams();
-        LambdaQueryWrapper<SysPost> wrapper = new LambdaQueryWrapper<>();
+        QueryWrapper wrapper = QueryWrapper.create();
         wrapper.like(StringUtils.isNotBlank(bo.getPostCode()), SysPost::getPostCode, bo.getPostCode())
             .like(StringUtils.isNotBlank(bo.getPostCategory()), SysPost::getPostCategory, bo.getPostCategory())
             .like(StringUtils.isNotBlank(bo.getPostName()), SysPost::getPostName, bo.getPostName())
@@ -112,7 +112,7 @@ public class SysPostServiceImpl implements ISysPostService, PostService {
      */
     @Override
     public List<SysPostVo> selectPostAll() {
-        return baseMapper.selectVoList(new QueryWrapper<>());
+        return baseMapper.selectVoList(QueryWrapper.create());
     }
 
     /**
@@ -146,7 +146,7 @@ public class SysPostServiceImpl implements ISysPostService, PostService {
      */
     @Override
     public List<SysPostVo> selectPostByIds(List<Long> postIds) {
-        return baseMapper.selectVoList(new LambdaQueryWrapper<SysPost>()
+        return baseMapper.selectVoList(QueryWrapper.create()
             .select(SysPost::getPostId, SysPost::getPostName, SysPost::getPostCode)
             .eq(SysPost::getStatus, SystemConstants.NORMAL)
             .in(CollUtil.isNotEmpty(postIds), SysPost::getPostId, postIds));
@@ -160,7 +160,7 @@ public class SysPostServiceImpl implements ISysPostService, PostService {
      */
     @Override
     public boolean checkPostNameUnique(SysPostBo post) {
-        boolean exist = baseMapper.exists(new LambdaQueryWrapper<SysPost>()
+        boolean exist = baseMapper.exists(QueryWrapper.create()
             .eq(SysPost::getPostName, post.getPostName())
             .eq(SysPost::getDeptId, post.getDeptId())
             .ne(ObjectUtil.isNotNull(post.getPostId()), SysPost::getPostId, post.getPostId()));
@@ -175,7 +175,7 @@ public class SysPostServiceImpl implements ISysPostService, PostService {
      */
     @Override
     public boolean checkPostCodeUnique(SysPostBo post) {
-        boolean exist = baseMapper.exists(new LambdaQueryWrapper<SysPost>()
+        boolean exist = baseMapper.exists(QueryWrapper.create()
             .eq(SysPost::getPostCode, post.getPostCode())
             .ne(ObjectUtil.isNotNull(post.getPostId()), SysPost::getPostId, post.getPostId()));
         return !exist;
@@ -189,7 +189,7 @@ public class SysPostServiceImpl implements ISysPostService, PostService {
      */
     @Override
     public long countUserPostById(Long postId) {
-        return userPostMapper.selectCount(new LambdaQueryWrapper<SysUserPost>().eq(SysUserPost::getPostId, postId));
+        return userPostMapper.selectCount(QueryWrapper.create().eq(SysUserPost::getPostId, postId));
     }
 
     /**
@@ -200,7 +200,7 @@ public class SysPostServiceImpl implements ISysPostService, PostService {
      */
     @Override
     public long countPostByDeptId(Long deptId) {
-        return baseMapper.selectCount(new LambdaQueryWrapper<SysPost>().eq(SysPost::getDeptId, deptId));
+        return baseMapper.selectCount(QueryWrapper.create().eq(SysPost::getDeptId, deptId));
     }
 
     /**
@@ -267,7 +267,7 @@ public class SysPostServiceImpl implements ISysPostService, PostService {
             return Collections.emptyMap();
         }
         List<SysPost> list = baseMapper.selectList(
-            new LambdaQueryWrapper<SysPost>()
+            QueryWrapper.create()
                 .select(SysPost::getPostId, SysPost::getPostName)
                 .in(SysPost::getPostId, postIds)
         );

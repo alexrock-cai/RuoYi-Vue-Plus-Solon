@@ -21,7 +21,7 @@ import org.dromara.system.mapper.SysClientMapper;
 import org.dromara.system.service.ISysClientService;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Service;
+import org.noear.solon.annotation.Component;
 
 import java.util.Collection;
 import java.util.List;
@@ -55,7 +55,7 @@ public class SysClientServiceImpl implements ISysClientService {
     @Cacheable(cacheNames = CacheNames.SYS_CLIENT, key = "#clientId")
     @Override
     public SysClientVo queryByClientId(String clientId) {
-        return baseMapper.selectVoOne(new LambdaQueryWrapper<SysClient>().eq(SysClient::getClientId, clientId));
+        return baseMapper.selectVoOne(QueryWrapper.create().eq(SysClient::getClientId, clientId));
     }
 
     /**
@@ -63,7 +63,7 @@ public class SysClientServiceImpl implements ISysClientService {
      */
     @Override
     public TableDataInfo<SysClientVo> queryPageList(SysClientBo bo, PageQuery pageQuery) {
-        LambdaQueryWrapper<SysClient> lqw = buildQueryWrapper(bo);
+        QueryWrapper lqw = buildQueryWrapper(bo);
         Page<SysClientVo> result = baseMapper.selectVoPage(pageQuery.build(), lqw);
         result.getRecords().forEach(r -> r.setGrantTypeList(StringUtils.splitList(r.getGrantType())));
         return TableDataInfo.build(result);
@@ -74,12 +74,12 @@ public class SysClientServiceImpl implements ISysClientService {
      */
     @Override
     public List<SysClientVo> queryList(SysClientBo bo) {
-        LambdaQueryWrapper<SysClient> lqw = buildQueryWrapper(bo);
+        QueryWrapper lqw = buildQueryWrapper(bo);
         return baseMapper.selectVoList(lqw);
     }
 
-    private LambdaQueryWrapper<SysClient> buildQueryWrapper(SysClientBo bo) {
-        LambdaQueryWrapper<SysClient> lqw = Wrappers.lambdaQuery();
+    private QueryWrapper buildQueryWrapper(SysClientBo bo) {
+        QueryWrapper lqw = Wrappers.lambdaQuery();
         lqw.eq(StringUtils.isNotBlank(bo.getClientId()), SysClient::getClientId, bo.getClientId());
         lqw.eq(StringUtils.isNotBlank(bo.getClientKey()), SysClient::getClientKey, bo.getClientKey());
         lqw.eq(StringUtils.isNotBlank(bo.getClientSecret()), SysClient::getClientSecret, bo.getClientSecret());
@@ -124,7 +124,7 @@ public class SysClientServiceImpl implements ISysClientService {
     @Override
     public int updateClientStatus(String clientId, String status) {
         return baseMapper.update(null,
-            new LambdaUpdateWrapper<SysClient>()
+            QueryWrapper.create()
                 .set(SysClient::getStatus, status)
                 .eq(SysClient::getClientId, clientId));
     }
@@ -146,7 +146,7 @@ public class SysClientServiceImpl implements ISysClientService {
      */
     @Override
     public boolean checkClickKeyUnique(SysClientBo client) {
-        boolean exist = baseMapper.exists(new LambdaQueryWrapper<SysClient>()
+        boolean exist = baseMapper.exists(QueryWrapper.create()
             .eq(SysClient::getClientKey, client.getClientKey())
             .ne(ObjectUtil.isNotNull(client.getId()), SysClient::getId, client.getId()));
         return !exist;

@@ -23,8 +23,8 @@ import org.dromara.workflow.mapper.FlwCategoryMapper;
 import org.dromara.workflow.service.IFlwCategoryService;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.noear.solon.annotation.Component;
+import org.noear.solon.annotation.Tran;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +65,7 @@ public class FlwCategoryServiceImpl implements IFlwCategoryService, CategoryServ
         if (ObjectUtil.isNull(categoryId)) {
             return null;
         }
-        FlowCategory category = baseMapper.selectOne(new LambdaQueryWrapper<FlowCategory>()
+        FlowCategory category = baseMapper.selectOne(QueryWrapper.create()
             .select(FlowCategory::getCategoryName).eq(FlowCategory::getCategoryId, categoryId));
         return ObjectUtils.notNullGetter(category, FlowCategory::getCategoryName);
     }
@@ -78,7 +78,7 @@ public class FlwCategoryServiceImpl implements IFlwCategoryService, CategoryServ
      */
     @Override
     public List<FlowCategoryVo> queryList(FlowCategoryBo bo) {
-        LambdaQueryWrapper<FlowCategory> lqw = buildQueryWrapper(bo);
+        QueryWrapper lqw = buildQueryWrapper(bo);
         return baseMapper.selectVoList(lqw);
     }
 
@@ -129,7 +129,7 @@ public class FlwCategoryServiceImpl implements IFlwCategoryService, CategoryServ
      */
     @Override
     public boolean checkCategoryNameUnique(FlowCategoryBo category) {
-        boolean exist = baseMapper.exists(new LambdaQueryWrapper<FlowCategory>()
+        boolean exist = baseMapper.exists(QueryWrapper.create()
             .eq(FlowCategory::getCategoryName, category.getCategoryName())
             .eq(FlowCategory::getParentId, category.getParentId())
             .ne(ObjectUtil.isNotNull(category.getCategoryId()), FlowCategory::getCategoryId, category.getCategoryId()));
@@ -157,12 +157,12 @@ public class FlwCategoryServiceImpl implements IFlwCategoryService, CategoryServ
      */
     @Override
     public boolean hasChildByCategoryId(Long categoryId) {
-        return baseMapper.exists(new LambdaQueryWrapper<FlowCategory>()
+        return baseMapper.exists(QueryWrapper.create()
             .eq(FlowCategory::getParentId, categoryId));
     }
 
-    private LambdaQueryWrapper<FlowCategory> buildQueryWrapper(FlowCategoryBo bo) {
-        LambdaQueryWrapper<FlowCategory> lqw = Wrappers.lambdaQuery();
+    private QueryWrapper buildQueryWrapper(FlowCategoryBo bo) {
+        QueryWrapper lqw = Wrappers.lambdaQuery();
         lqw.eq(FlowCategory::getDelFlag, SystemConstants.NORMAL);
         lqw.eq(ObjectUtil.isNotNull(bo.getCategoryId()), FlowCategory::getCategoryId, bo.getCategoryId());
         lqw.eq(ObjectUtil.isNotNull(bo.getParentId()), FlowCategory::getParentId, bo.getParentId());
@@ -199,7 +199,7 @@ public class FlwCategoryServiceImpl implements IFlwCategoryService, CategoryServ
      */
     @CacheEvict(cacheNames = FlowConstant.FLOW_CATEGORY_NAME, key = "#bo.categoryId")
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Tran(rollbackFor = Exception.class)
     public int updateByBo(FlowCategoryBo bo) {
         FlowCategory category = MapstructUtils.convert(bo, FlowCategory.class);
         FlowCategory oldCategory = baseMapper.selectById(category.getCategoryId());
@@ -233,7 +233,7 @@ public class FlwCategoryServiceImpl implements IFlwCategoryService, CategoryServ
      * @param oldAncestors 旧的父ID集合
      */
     private void updateCategoryChildren(Long categoryId, String newAncestors, String oldAncestors) {
-        List<FlowCategory> children = baseMapper.selectList(new LambdaQueryWrapper<FlowCategory>()
+        List<FlowCategory> children = baseMapper.selectList(QueryWrapper.create()
             .apply(DataBaseHelper.findInSet(categoryId, "ancestors")));
         List<FlowCategory> list = new ArrayList<>();
         for (FlowCategory child : children) {

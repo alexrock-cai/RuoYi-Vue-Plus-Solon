@@ -9,7 +9,7 @@ import org.dromara.common.tenant.helper.TenantHelper;
 import org.dromara.warm.flow.core.entity.Instance;
 import org.dromara.warm.flow.core.entity.Task;
 import org.dromara.workflow.common.ConditionalOnEnable;
-import org.springframework.stereotype.Component;
+import org.noear.solon.annotation.Component;
 
 import java.util.Map;
 

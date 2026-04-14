@@ -1,8 +1,8 @@
 package org.dromara.monitor.admin.config;
 
 import de.codecentric.boot.admin.server.config.AdminServerProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.noear.solon.annotation.Bean;
+import org.noear.solon.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;

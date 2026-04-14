@@ -1,7 +1,7 @@
 package org.dromara.common.security.config.properties;
 
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.noear.solon.annotation.PropsSet;
 
 /**
  * Security 配置属性
@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @author Lion Li
  */
 @Data
-@ConfigurationProperties(prefix = "security")
+@PropsSet(prefix = "security")
 public class SecurityProperties {
 
     /**

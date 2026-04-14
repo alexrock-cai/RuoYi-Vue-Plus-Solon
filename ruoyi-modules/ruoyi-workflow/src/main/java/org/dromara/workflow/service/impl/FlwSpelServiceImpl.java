@@ -22,7 +22,7 @@ import org.dromara.workflow.domain.bo.FlowSpelBo;
 import org.dromara.workflow.domain.vo.FlowSpelVo;
 import org.dromara.workflow.mapper.FlwSpelMapper;
 import org.dromara.workflow.service.IFlwSpelService;
-import org.springframework.stereotype.Service;
+import org.noear.solon.annotation.Component;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -63,7 +63,7 @@ public class FlwSpelServiceImpl implements IFlwSpelService {
      */
     @Override
     public TableDataInfo<FlowSpelVo> queryPageList(FlowSpelBo bo, PageQuery pageQuery) {
-        LambdaQueryWrapper<FlowSpel> lqw = buildQueryWrapper(bo);
+        QueryWrapper lqw = buildQueryWrapper(bo);
         Page<FlowSpelVo> result = baseMapper.selectVoPage(pageQuery.build(), lqw);
         return TableDataInfo.build(result);
     }
@@ -76,13 +76,13 @@ public class FlwSpelServiceImpl implements IFlwSpelService {
      */
     @Override
     public List<FlowSpelVo> queryList(FlowSpelBo bo) {
-        LambdaQueryWrapper<FlowSpel> lqw = buildQueryWrapper(bo);
+        QueryWrapper lqw = buildQueryWrapper(bo);
         return baseMapper.selectVoList(lqw);
     }
 
-    private LambdaQueryWrapper<FlowSpel> buildQueryWrapper(FlowSpelBo bo) {
+    private QueryWrapper buildQueryWrapper(FlowSpelBo bo) {
         Map<String, Object> params = bo.getParams();
-        LambdaQueryWrapper<FlowSpel> lqw = Wrappers.lambdaQuery();
+        QueryWrapper lqw = Wrappers.lambdaQuery();
         lqw.orderByAsc(FlowSpel::getId);
         lqw.like(StringUtils.isNotBlank(bo.getComponentName()), FlowSpel::getComponentName, bo.getComponentName());
         lqw.like(StringUtils.isNotBlank(bo.getMethodName()), FlowSpel::getMethodName, bo.getMethodName());
@@ -128,7 +128,7 @@ public class FlwSpelServiceImpl implements IFlwSpelService {
      */
     private void validEntityBeforeSave(FlowSpel entity){
         if (StringUtils.isNotBlank(entity.getViewSpel())) {
-            boolean exists = baseMapper.exists(new LambdaQueryWrapper<FlowSpel>()
+            boolean exists = baseMapper.exists(QueryWrapper.create()
                 .eq(FlowSpel::getViewSpel, entity.getViewSpel())
                 .ne(ObjectUtil.isNotNull(entity.getId()), FlowSpel::getId, entity.getId()));
             if (exists) {
@@ -187,7 +187,7 @@ public class FlwSpelServiceImpl implements IFlwSpelService {
             return Collections.emptyMap();
         }
         List<FlowSpel> list = baseMapper.selectList(
-            new LambdaQueryWrapper<FlowSpel>()
+            QueryWrapper.create()
                 .select(FlowSpel::getViewSpel, FlowSpel::getRemark)
                 .in(FlowSpel::getViewSpel, viewSpels)
         );

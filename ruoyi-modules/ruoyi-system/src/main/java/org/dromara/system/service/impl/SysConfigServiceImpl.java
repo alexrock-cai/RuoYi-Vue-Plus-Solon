@@ -27,7 +27,7 @@ import org.dromara.system.mapper.SysConfigMapper;
 import org.dromara.system.service.ISysConfigService;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Service;
+import org.noear.solon.annotation.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -52,7 +52,7 @@ public class SysConfigServiceImpl implements ISysConfigService, ConfigService {
      */
     @Override
     public TableDataInfo<SysConfigVo> selectPageConfigList(SysConfigBo config, PageQuery pageQuery) {
-        LambdaQueryWrapper<SysConfig> lqw = buildQueryWrapper(config);
+        QueryWrapper lqw = buildQueryWrapper(config);
         Page<SysConfigVo> page = baseMapper.selectVoPage(pageQuery.build(), lqw);
         return TableDataInfo.build(page);
     }
@@ -77,7 +77,7 @@ public class SysConfigServiceImpl implements ISysConfigService, ConfigService {
     @Cacheable(cacheNames = CacheNames.SYS_CONFIG, key = "#configKey")
     @Override
     public String selectConfigByKey(String configKey) {
-        SysConfig retConfig = baseMapper.selectOne(new LambdaQueryWrapper<SysConfig>()
+        SysConfig retConfig = baseMapper.selectOne(QueryWrapper.create()
             .eq(SysConfig::getConfigKey, configKey));
         return ObjectUtils.notNullGetter(retConfig, SysConfig::getConfigValue, StringUtils.EMPTY);
     }
@@ -104,13 +104,13 @@ public class SysConfigServiceImpl implements ISysConfigService, ConfigService {
      */
     @Override
     public List<SysConfigVo> selectConfigList(SysConfigBo config) {
-        LambdaQueryWrapper<SysConfig> lqw = buildQueryWrapper(config);
+        QueryWrapper lqw = buildQueryWrapper(config);
         return baseMapper.selectVoList(lqw);
     }
 
-    private LambdaQueryWrapper<SysConfig> buildQueryWrapper(SysConfigBo bo) {
+    private QueryWrapper buildQueryWrapper(SysConfigBo bo) {
         Map<String, Object> params = bo.getParams();
-        LambdaQueryWrapper<SysConfig> lqw = Wrappers.lambdaQuery();
+        QueryWrapper lqw = Wrappers.lambdaQuery();
         lqw.like(StringUtils.isNotBlank(bo.getConfigName()), SysConfig::getConfigName, bo.getConfigName());
         lqw.eq(StringUtils.isNotBlank(bo.getConfigType()), SysConfig::getConfigType, bo.getConfigType());
         lqw.like(StringUtils.isNotBlank(bo.getConfigKey()), SysConfig::getConfigKey, bo.getConfigKey());
@@ -156,7 +156,7 @@ public class SysConfigServiceImpl implements ISysConfigService, ConfigService {
             row = baseMapper.updateById(config);
         } else {
             CacheUtils.evict(CacheNames.SYS_CONFIG, config.getConfigKey());
-            row = baseMapper.update(config, new LambdaQueryWrapper<SysConfig>()
+            row = baseMapper.update(config, QueryWrapper.create()
                 .eq(SysConfig::getConfigKey, config.getConfigKey()));
         }
         if (row > 0) {
@@ -198,7 +198,7 @@ public class SysConfigServiceImpl implements ISysConfigService, ConfigService {
      */
     @Override
     public boolean checkConfigKeyUnique(SysConfigBo config) {
-        boolean exist = baseMapper.exists(new LambdaQueryWrapper<SysConfig>()
+        boolean exist = baseMapper.exists(QueryWrapper.create()
             .eq(SysConfig::getConfigKey, config.getConfigKey())
             .ne(ObjectUtil.isNotNull(config.getConfigId()), SysConfig::getConfigId, config.getConfigId()));
         return !exist;

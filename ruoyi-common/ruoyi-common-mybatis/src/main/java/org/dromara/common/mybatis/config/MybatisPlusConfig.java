@@ -7,7 +7,7 @@ import org.dromara.common.mybatis.handler.FlexEntityAuditHandler;
 import org.dromara.common.mybatis.handler.MybatisExceptionHandler;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Bean;
+import org.noear.solon.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Role;
 import org.springframework.transaction.annotation.EnableTransactionManagement;

@@ -93,7 +93,7 @@ public interface SysDeptMapper extends BaseMapperPlus<SysDept, SysDeptVo> {
         @DataColumn(key = "deptName", value = "dept_id")
     })
     default long countDeptById(Long deptId) {
-        return this.selectCount(new LambdaQueryWrapper<SysDept>().eq(SysDept::getDeptId, deptId));
+        return this.selectCount(QueryWrapper.create().eq(SysDept::getDeptId, deptId));
     }
 
     /**
@@ -103,7 +103,7 @@ public interface SysDeptMapper extends BaseMapperPlus<SysDept, SysDeptVo> {
      * @return 包含子部门的列表
      */
     default List<SysDept> selectListByParentId(Long parentId) {
-        return this.selectList(new LambdaQueryWrapper<SysDept>()
+        return this.selectList(QueryWrapper.create()
             .select(SysDept::getDeptId)
             .apply(DataBaseHelper.findInSet(parentId, "ancestors")));
     }
@@ -129,7 +129,7 @@ public interface SysDeptMapper extends BaseMapperPlus<SysDept, SysDeptVo> {
      * @return 选中部门列表
      */
     default List<Long> selectDeptListByRoleId(Long roleId, boolean deptCheckStrictly) {
-        LambdaQueryWrapper<SysDept> wrapper = new LambdaQueryWrapper<>();
+        QueryWrapper wrapper = QueryWrapper.create();
         wrapper.select(SysDept::getDeptId)
             .inSql(SysDept::getDeptId, this.buildDeptByRoleSql(roleId))
             .orderByAsc(SysDept::getParentId)

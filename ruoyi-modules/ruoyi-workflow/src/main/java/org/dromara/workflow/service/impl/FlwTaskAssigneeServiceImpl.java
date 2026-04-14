@@ -27,7 +27,7 @@ import org.dromara.workflow.common.ConditionalOnEnable;
 import org.dromara.workflow.common.enums.TaskAssigneeEnum;
 import org.dromara.workflow.service.IFlwSpelService;
 import org.dromara.workflow.service.IFlwTaskAssigneeService;
-import org.springframework.stereotype.Service;
+import org.noear.solon.annotation.Component;
 
 import java.util.*;
 import java.util.stream.Collectors;

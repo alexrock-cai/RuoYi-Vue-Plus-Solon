@@ -19,8 +19,8 @@ import org.dromara.system.domain.vo.SysTenantPackageVo;
 import org.dromara.system.mapper.SysTenantMapper;
 import org.dromara.system.mapper.SysTenantPackageMapper;
 import org.dromara.system.service.ISysTenantPackageService;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.noear.solon.annotation.Component;
+import org.noear.solon.annotation.Tran;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -51,14 +51,14 @@ public class SysTenantPackageServiceImpl implements ISysTenantPackageService {
      */
     @Override
     public TableDataInfo<SysTenantPackageVo> queryPageList(SysTenantPackageBo bo, PageQuery pageQuery) {
-        LambdaQueryWrapper<SysTenantPackage> lqw = buildQueryWrapper(bo);
+        QueryWrapper lqw = buildQueryWrapper(bo);
         Page<SysTenantPackageVo> result = baseMapper.selectVoPage(pageQuery.build(), lqw);
         return TableDataInfo.build(result);
     }
 
     @Override
     public List<SysTenantPackageVo> selectList() {
-        return baseMapper.selectVoList(new LambdaQueryWrapper<SysTenantPackage>()
+        return baseMapper.selectVoList(QueryWrapper.create()
                 .eq(SysTenantPackage::getStatus, SystemConstants.NORMAL));
     }
 
@@ -67,12 +67,12 @@ public class SysTenantPackageServiceImpl implements ISysTenantPackageService {
      */
     @Override
     public List<SysTenantPackageVo> queryList(SysTenantPackageBo bo) {
-        LambdaQueryWrapper<SysTenantPackage> lqw = buildQueryWrapper(bo);
+        QueryWrapper lqw = buildQueryWrapper(bo);
         return baseMapper.selectVoList(lqw);
     }
 
-    private LambdaQueryWrapper<SysTenantPackage> buildQueryWrapper(SysTenantPackageBo bo) {
-        LambdaQueryWrapper<SysTenantPackage> lqw = Wrappers.lambdaQuery();
+    private QueryWrapper buildQueryWrapper(SysTenantPackageBo bo) {
+        QueryWrapper lqw = Wrappers.lambdaQuery();
         lqw.like(StringUtils.isNotBlank(bo.getPackageName()), SysTenantPackage::getPackageName, bo.getPackageName());
         lqw.eq(StringUtils.isNotBlank(bo.getStatus()), SysTenantPackage::getStatus, bo.getStatus());
         lqw.orderByAsc(SysTenantPackage::getPackageId);
@@ -83,7 +83,7 @@ public class SysTenantPackageServiceImpl implements ISysTenantPackageService {
      * 新增租户套餐
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Tran(rollbackFor = Exception.class)
     public Boolean insertByBo(SysTenantPackageBo bo) {
         SysTenantPackage add = MapstructUtils.convert(bo, SysTenantPackage.class);
         // 保存菜单id
@@ -100,7 +100,7 @@ public class SysTenantPackageServiceImpl implements ISysTenantPackageService {
      * 修改租户套餐
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Tran(rollbackFor = Exception.class)
     public Boolean updateByBo(SysTenantPackageBo bo) {
         SysTenantPackage update = MapstructUtils.convert(bo, SysTenantPackage.class);
         // 保存菜单id
@@ -114,7 +114,7 @@ public class SysTenantPackageServiceImpl implements ISysTenantPackageService {
      */
     @Override
     public boolean checkPackageNameUnique(SysTenantPackageBo bo) {
-        boolean exist = baseMapper.exists(new LambdaQueryWrapper<SysTenantPackage>()
+        boolean exist = baseMapper.exists(QueryWrapper.create()
             .eq(SysTenantPackage::getPackageName, bo.getPackageName())
             .ne(ObjectUtil.isNotNull(bo.getPackageId()), SysTenantPackage::getPackageId, bo.getPackageId()));
         return !exist;
@@ -136,10 +136,10 @@ public class SysTenantPackageServiceImpl implements ISysTenantPackageService {
      * 批量删除租户套餐
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Tran(rollbackFor = Exception.class)
     public Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid) {
         if(isValid){
-            boolean exists = tenantMapper.exists(new LambdaQueryWrapper<SysTenant>().in(SysTenant::getPackageId, ids));
+            boolean exists = tenantMapper.exists(QueryWrapper.create().in(SysTenant::getPackageId, ids));
             if (exists) {
                 throw new ServiceException("租户套餐已被使用");
             }

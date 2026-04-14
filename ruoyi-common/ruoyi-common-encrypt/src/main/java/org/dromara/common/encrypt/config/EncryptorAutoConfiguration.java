@@ -7,11 +7,11 @@ import org.dromara.common.encrypt.core.EncryptorManager;
 import org.dromara.common.encrypt.interceptor.MybatisDecryptInterceptor;
 import org.dromara.common.encrypt.interceptor.MybatisEncryptInterceptor;
 import org.dromara.common.encrypt.properties.EncryptorProperties;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.inject.Inject;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
+
+import org.noear.solon.annotation.Bean;
 
 /**
  * 加解密配置
@@ -25,7 +25,7 @@ import org.springframework.context.annotation.Bean;
 @Slf4j
 public class EncryptorAutoConfiguration {
 
-    @Autowired
+    @Inject
     private EncryptorProperties properties;
 
     @Bean

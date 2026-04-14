@@ -7,7 +7,7 @@ import com.baomidou.lock.annotation.Lock4j;
 import com.baomidou.lock.executor.RedissonLockExecutor;
 import org.dromara.common.core.domain.R;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.inject.Inject;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,7 +25,7 @@ import java.time.LocalTime;
 @RequestMapping("/demo/redisLock")
 public class RedisLockController {
 
-    @Autowired
+    @Inject
     private LockTemplate lockTemplate;
 
     /**

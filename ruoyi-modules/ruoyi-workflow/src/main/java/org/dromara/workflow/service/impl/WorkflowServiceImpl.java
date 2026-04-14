@@ -17,8 +17,8 @@ import org.dromara.workflow.domain.bo.StartProcessBo;
 import org.dromara.workflow.service.IFlwDefinitionService;
 import org.dromara.workflow.service.IFlwInstanceService;
 import org.dromara.workflow.service.IFlwTaskService;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.noear.solon.annotation.Component;
+import org.noear.solon.annotation.Tran;
 
 import java.util.Collections;
 import java.util.List;
@@ -158,7 +158,7 @@ public class WorkflowServiceImpl implements WorkflowService {
      * @param startProcess 参数
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Tran(rollbackFor = Exception.class)
     public boolean startCompleteTask(StartProcessDTO startProcess) {
         StartProcessBo processBo = new StartProcessBo();
         processBo.setBusinessId(startProcess.getBusinessId());

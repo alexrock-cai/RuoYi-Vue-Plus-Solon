@@ -1,7 +1,7 @@
 package org.dromara.common.mail.config.properties;
 
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.noear.solon.annotation.PropsSet;
 
 /**
  * JavaMail 配置属性
@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @author Michelle.Chung
  */
 @Data
-@ConfigurationProperties(prefix = "mail")
+@PropsSet(prefix = "mail")
 public class MailProperties {
 
     /**

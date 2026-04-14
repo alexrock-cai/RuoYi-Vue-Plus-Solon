@@ -19,7 +19,7 @@ import org.dromara.workflow.common.ConditionalOnEnable;
 import org.dromara.workflow.common.enums.MessageTypeEnum;
 import org.dromara.workflow.service.IFlwCommonService;
 import org.dromara.workflow.service.IFlwTaskService;
-import org.springframework.stereotype.Service;
+import org.noear.solon.annotation.Component;
 
 import java.util.ArrayList;
 import java.util.HashMap;

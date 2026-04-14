@@ -18,7 +18,7 @@ import org.dromara.system.domain.vo.SysDictDataVo;
 import org.dromara.system.mapper.SysDictDataMapper;
 import org.dromara.system.service.ISysDictDataService;
 import org.springframework.cache.annotation.CachePut;
-import org.springframework.stereotype.Service;
+import org.noear.solon.annotation.Component;
 
 import java.util.List;
 
@@ -42,7 +42,7 @@ public class SysDictDataServiceImpl implements ISysDictDataService {
      */
     @Override
     public TableDataInfo<SysDictDataVo> selectPageDictDataList(SysDictDataBo dictData, PageQuery pageQuery) {
-        LambdaQueryWrapper<SysDictData> lqw = buildQueryWrapper(dictData);
+        QueryWrapper lqw = buildQueryWrapper(dictData);
         Page<SysDictDataVo> page = baseMapper.selectVoPage(pageQuery.build(), lqw);
         return TableDataInfo.build(page);
     }
@@ -55,12 +55,12 @@ public class SysDictDataServiceImpl implements ISysDictDataService {
      */
     @Override
     public List<SysDictDataVo> selectDictDataList(SysDictDataBo dictData) {
-        LambdaQueryWrapper<SysDictData> lqw = buildQueryWrapper(dictData);
+        QueryWrapper lqw = buildQueryWrapper(dictData);
         return baseMapper.selectVoList(lqw);
     }
 
-    private LambdaQueryWrapper<SysDictData> buildQueryWrapper(SysDictDataBo bo) {
-        LambdaQueryWrapper<SysDictData> lqw = Wrappers.lambdaQuery();
+    private QueryWrapper buildQueryWrapper(SysDictDataBo bo) {
+        QueryWrapper lqw = Wrappers.lambdaQuery();
         lqw.eq(bo.getDictSort() != null, SysDictData::getDictSort, bo.getDictSort());
         lqw.like(StringUtils.isNotBlank(bo.getDictLabel()), SysDictData::getDictLabel, bo.getDictLabel());
         lqw.eq(StringUtils.isNotBlank(bo.getDictType()), SysDictData::getDictType, bo.getDictType());
@@ -77,7 +77,7 @@ public class SysDictDataServiceImpl implements ISysDictDataService {
      */
     @Override
     public String selectDictLabel(String dictType, String dictValue) {
-        return baseMapper.selectOne(new LambdaQueryWrapper<SysDictData>()
+        return baseMapper.selectOne(QueryWrapper.create()
                 .select(SysDictData::getDictLabel)
                 .eq(SysDictData::getDictType, dictType)
                 .eq(SysDictData::getDictValue, dictValue))
@@ -149,7 +149,7 @@ public class SysDictDataServiceImpl implements ISysDictDataService {
      */
     @Override
     public boolean checkDictDataUnique(SysDictDataBo dict) {
-        boolean exist = baseMapper.exists(new LambdaQueryWrapper<SysDictData>()
+        boolean exist = baseMapper.exists(QueryWrapper.create()
             .eq(SysDictData::getDictType, dict.getDictType())
             .eq(SysDictData::getDictValue, dict.getDictValue())
             .ne(ObjectUtil.isNotNull(dict.getDictCode()), SysDictData::getDictCode, dict.getDictCode()));

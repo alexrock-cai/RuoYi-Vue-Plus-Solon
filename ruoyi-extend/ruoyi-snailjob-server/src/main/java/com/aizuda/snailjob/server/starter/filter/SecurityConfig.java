@@ -1,9 +1,9 @@
 package com.aizuda.snailjob.server.starter.filter;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.noear.solon.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.noear.solon.annotation.Bean;
+import org.noear.solon.annotation.Configuration;
 
 /**
  * 权限安全配置

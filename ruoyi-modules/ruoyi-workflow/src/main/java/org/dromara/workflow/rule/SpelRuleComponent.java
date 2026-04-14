@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.dromara.common.core.exception.ServiceException;
 import org.dromara.common.core.service.DeptService;
 import org.dromara.workflow.common.ConditionalOnEnable;
-import org.springframework.stereotype.Component;
+import org.noear.solon.annotation.Component;
 
 /**
  * spel表达式规则组件

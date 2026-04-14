@@ -1,7 +1,7 @@
 package org.dromara.common.sse.config;
 
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.noear.solon.annotation.PropsSet;
 
 /**
  * SSE 配置项
@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @author Lion Li
  */
 @Data
-@ConfigurationProperties("sse")
+@PropsSet("sse")
 public class SseProperties {
 
     private Boolean enabled;

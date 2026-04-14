@@ -36,8 +36,8 @@ import org.dromara.generator.mapper.GenTableMapper;
 import org.dromara.generator.util.GenUtils;
 import org.dromara.generator.util.VelocityInitializer;
 import org.dromara.generator.util.VelocityUtils;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.noear.solon.annotation.Component;
+import org.noear.solon.annotation.Tran;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -71,7 +71,7 @@ public class GenTableServiceImpl implements IGenTableService {
      */
     @Override
     public List<GenTableColumn> selectGenTableColumnListByTableId(Long tableId) {
-        return genTableColumnMapper.selectList(new LambdaQueryWrapper<GenTableColumn>()
+        return genTableColumnMapper.selectList(QueryWrapper.create()
             .eq(GenTableColumn::getTableId, tableId)
             .orderByAsc(GenTableColumn::getSort));
     }
@@ -219,7 +219,7 @@ public class GenTableServiceImpl implements IGenTableService {
      *
      * @param genTable 业务信息
      */
-    @Transactional(rollbackFor = Exception.class)
+    @Tran(rollbackFor = Exception.class)
     @Override
     public void updateGenTable(GenTable genTable) {
         String options = JsonUtils.toJsonString(genTable.getParams());
@@ -237,12 +237,12 @@ public class GenTableServiceImpl implements IGenTableService {
      *
      * @param tableIds 需要删除的数据ID
      */
-    @Transactional(rollbackFor = Exception.class)
+    @Tran(rollbackFor = Exception.class)
     @Override
     public void deleteGenTableByIds(Long[] tableIds) {
         List<Long> ids = Arrays.asList(tableIds);
         baseMapper.deleteByIds(ids);
-        genTableColumnMapper.delete(new LambdaQueryWrapper<GenTableColumn>().in(GenTableColumn::getTableId, ids));
+        genTableColumnMapper.delete(QueryWrapper.create().in(GenTableColumn::getTableId, ids));
     }
 
     /**

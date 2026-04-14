@@ -14,7 +14,7 @@ import org.dromara.common.excel.utils.ExcelUtil;
 import org.dromara.common.excel.utils.ExcelWriterWrapper;
 import org.dromara.demo.domain.vo.ExportDemoVo;
 import org.dromara.demo.service.IExportExcelService;
-import org.springframework.stereotype.Service;
+import org.noear.solon.annotation.Component;
 
 import java.io.IOException;
 import java.util.ArrayList;

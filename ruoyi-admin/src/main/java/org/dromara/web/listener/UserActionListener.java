@@ -20,7 +20,7 @@ import org.dromara.common.redis.utils.RedisUtils;
 import org.dromara.common.satoken.utils.LoginHelper;
 import org.dromara.common.tenant.helper.TenantHelper;
 import org.dromara.web.service.SysLoginService;
-import org.springframework.stereotype.Component;
+import org.noear.solon.annotation.Component;
 
 import java.time.Duration;
 

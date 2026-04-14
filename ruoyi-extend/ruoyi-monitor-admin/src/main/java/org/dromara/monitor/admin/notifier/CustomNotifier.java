@@ -6,7 +6,7 @@ import de.codecentric.boot.admin.server.domain.events.InstanceEvent;
 import de.codecentric.boot.admin.server.domain.events.InstanceStatusChangedEvent;
 import de.codecentric.boot.admin.server.notify.AbstractEventNotifier;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
+import org.noear.solon.annotation.Component;
 import reactor.core.publisher.Mono;
 
 import static de.codecentric.boot.admin.server.domain.values.StatusInfo.*;

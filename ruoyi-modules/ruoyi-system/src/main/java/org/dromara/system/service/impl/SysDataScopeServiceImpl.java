@@ -12,7 +12,7 @@ import org.dromara.system.mapper.SysDeptMapper;
 import org.dromara.system.mapper.SysRoleDeptMapper;
 import org.dromara.system.service.ISysDataScopeService;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Service;
+import org.noear.solon.annotation.Component;
 
 import java.util.List;
 
@@ -44,7 +44,7 @@ public class SysDataScopeServiceImpl implements ISysDataScopeService {
             return "-1";
         }
         List<SysRoleDept> list = roleDeptMapper.selectList(
-            new LambdaQueryWrapper<SysRoleDept>()
+            QueryWrapper.create()
                 .select(SysRoleDept::getDeptId)
                 .eq(SysRoleDept::getRoleId, roleId));
         if (CollUtil.isNotEmpty(list)) {
