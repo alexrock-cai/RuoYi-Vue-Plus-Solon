@@ -3,8 +3,8 @@ package org.dromara.workflow.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.mybatisflex.core.query.QueryWrapper;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.common.core.domain.dto.UserDTO;
@@ -24,8 +24,8 @@ import org.dromara.warm.flow.orm.mapper.FlowHisTaskMapper;
 import org.dromara.warm.flow.ui.service.ChartExtService;
 import org.dromara.workflow.common.ConditionalOnEnable;
 import org.dromara.workflow.common.constant.FlowConstant;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.noear.solon.annotation.Value;
+import org.noear.solon.annotation.Component;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -263,7 +263,7 @@ public class FlwChartExtServiceImpl implements ChartExtService {
      * @return 历史任务列表
      */
     public List<FlowHisTask> getHisTaskGroupedByNode(Long instanceId) {
-        LambdaQueryWrapper<FlowHisTask> wrapper = Wrappers.lambdaQuery();
+        QueryWrapper wrapper = Wrappers.lambdaQuery();
         wrapper.eq(FlowHisTask::getInstanceId, instanceId)
             .eq(FlowHisTask::getNodeType, NodeType.BETWEEN.getKey())
             .orderByDesc(FlowHisTask::getUpdateTime);

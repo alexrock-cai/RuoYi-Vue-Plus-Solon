@@ -1,7 +1,7 @@
 package org.dromara.common.core.config;
 
 import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
+
 import org.springframework.scheduling.annotation.EnableAsync;
 
 /**

@@ -1,7 +1,7 @@
 package org.dromara.web.service;
 
 import cn.hutool.crypto.digest.BCrypt;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.mybatisflex.core.query.QueryWrapper;
 import lombok.RequiredArgsConstructor;
 import org.dromara.common.core.constant.Constants;
 import org.dromara.common.core.constant.GlobalConstants;
@@ -22,7 +22,7 @@ import org.dromara.system.domain.SysUser;
 import org.dromara.system.domain.bo.SysUserBo;
 import org.dromara.system.mapper.SysUserMapper;
 import org.dromara.system.service.ISysUserService;
-import org.springframework.stereotype.Service;
+import org.noear.solon.annotation.Component;
 
 /**
  * 注册校验方法
@@ -59,7 +59,7 @@ public class SysRegisterService {
         sysUser.setUserType(userType);
 
         boolean exist = TenantHelper.dynamic(tenantId, () -> {
-            return userMapper.exists(new LambdaQueryWrapper<SysUser>()
+            return userMapper.exists(QueryWrapper.create()
                 .eq(SysUser::getUserName, sysUser.getUserName()));
         });
         if (exist) {

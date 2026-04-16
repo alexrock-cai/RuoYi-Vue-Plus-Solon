@@ -1,7 +1,7 @@
 package org.dromara.system.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.mybatisflex.core.query.QueryWrapper;
 import lombok.RequiredArgsConstructor;
 import org.dromara.common.core.utils.MapstructUtils;
 import org.dromara.common.core.utils.StringUtils;
@@ -10,7 +10,7 @@ import org.dromara.system.domain.bo.SysSocialBo;
 import org.dromara.system.domain.vo.SysSocialVo;
 import org.dromara.system.mapper.SysSocialMapper;
 import org.dromara.system.service.ISysSocialService;
-import org.springframework.stereotype.Service;
+import org.noear.solon.annotation.Component;
 
 import java.util.List;
 
@@ -40,7 +40,7 @@ public class SysSocialServiceImpl implements ISysSocialService {
      */
     @Override
     public List<SysSocialVo> queryList(SysSocialBo bo) {
-        LambdaQueryWrapper<SysSocial> lqw = new LambdaQueryWrapper<SysSocial>()
+        QueryWrapper lqw = QueryWrapper.create()
             .eq(ObjectUtil.isNotNull(bo.getUserId()), SysSocial::getUserId, bo.getUserId())
             .eq(StringUtils.isNotBlank(bo.getAuthId()), SysSocial::getAuthId, bo.getAuthId())
             .eq(StringUtils.isNotBlank(bo.getSource()), SysSocial::getSource, bo.getSource());
@@ -49,7 +49,7 @@ public class SysSocialServiceImpl implements ISysSocialService {
 
     @Override
     public List<SysSocialVo> queryListByUserId(Long userId) {
-        return baseMapper.selectVoList(new LambdaQueryWrapper<SysSocial>().eq(SysSocial::getUserId, userId));
+        return baseMapper.selectVoList(QueryWrapper.create().eq(SysSocial::getUserId, userId));
     }
 
 
@@ -106,7 +106,7 @@ public class SysSocialServiceImpl implements ISysSocialService {
      */
     @Override
     public List<SysSocialVo> selectByAuthId(String authId) {
-        return baseMapper.selectVoList(new LambdaQueryWrapper<SysSocial>().eq(SysSocial::getAuthId, authId));
+        return baseMapper.selectVoList(QueryWrapper.create().eq(SysSocial::getAuthId, authId));
     }
 
 }

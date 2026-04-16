@@ -22,7 +22,7 @@ import org.dromara.workflow.common.enums.VariablesEnum;
 import org.dromara.workflow.domain.vo.ButtonPermissionVo;
 import org.dromara.workflow.domain.vo.NodeExtVo;
 import org.dromara.workflow.service.IFlwNodeExtService;
-import org.springframework.stereotype.Service;
+import org.noear.solon.annotation.Component;
 
 import java.util.*;
 import java.util.stream.Collectors;

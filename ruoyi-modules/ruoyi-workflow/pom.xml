@@ -72,11 +72,11 @@
         </dependency>
         <dependency>
             <groupId>org.dromara.warm</groupId>
-            <artifactId>warm-flow-mybatis-plus-sb3-starter</artifactId>
+            <artifactId>warm-flow-mybatis-flex-solon-plugin</artifactId>
         </dependency>
         <dependency>
             <groupId>org.dromara.warm</groupId>
-            <artifactId>warm-flow-plugin-ui-sb-web</artifactId>
+            <artifactId>warm-flow-plugin-ui-solon-web</artifactId>
         </dependency>
     </dependencies>
 

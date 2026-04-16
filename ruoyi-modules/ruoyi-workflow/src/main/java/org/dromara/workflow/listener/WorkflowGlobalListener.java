@@ -29,7 +29,7 @@ import org.dromara.workflow.service.IFlwCommonService;
 import org.dromara.workflow.service.IFlwInstanceService;
 import org.dromara.workflow.service.IFlwNodeExtService;
 import org.dromara.workflow.service.IFlwTaskService;
-import org.springframework.stereotype.Component;
+import org.noear.solon.annotation.Component;
 
 import java.util.HashMap;
 import java.util.List;

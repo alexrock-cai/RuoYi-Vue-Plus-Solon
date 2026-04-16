@@ -1,7 +1,7 @@
 package org.dromara.workflow.config;
 
 import org.dromara.workflow.common.ConditionalOnEnable;
-import org.springframework.context.annotation.Configuration;
+import org.noear.solon.annotation.Configuration;
 
 /**
  * warmFlow配置

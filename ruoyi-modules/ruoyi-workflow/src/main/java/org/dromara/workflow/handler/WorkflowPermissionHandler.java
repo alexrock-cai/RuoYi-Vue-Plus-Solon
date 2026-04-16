@@ -12,7 +12,7 @@ import org.dromara.warm.flow.core.dto.FlowParams;
 import org.dromara.warm.flow.core.handler.PermissionHandler;
 import org.dromara.workflow.common.ConditionalOnEnable;
 import org.dromara.workflow.service.IFlwTaskAssigneeService;
-import org.springframework.stereotype.Component;
+import org.noear.solon.annotation.Component;
 
 import java.util.Collections;
 import java.util.List;

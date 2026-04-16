@@ -17,10 +17,10 @@ import org.redisson.client.codec.StringCodec;
 import org.redisson.codec.CompositeCodec;
 import org.redisson.codec.TypedJsonJacksonCodec;
 import org.redisson.spring.starter.RedissonAutoConfigurationCustomizer;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.inject.Inject;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
+
+import org.noear.solon.annotation.Bean;
 import org.springframework.core.task.VirtualThreadTaskExecutor;
 
 import java.time.LocalDateTime;
@@ -37,7 +37,7 @@ import java.util.TimeZone;
 @EnableConfigurationProperties(RedissonProperties.class)
 public class RedisConfig {
 
-    @Autowired
+    @Inject
     private RedissonProperties redissonProperties;
 
     @Bean

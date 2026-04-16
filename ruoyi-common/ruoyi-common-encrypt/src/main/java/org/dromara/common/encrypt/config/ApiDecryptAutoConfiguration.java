@@ -5,10 +5,10 @@ import org.dromara.common.encrypt.filter.CryptoFilter;
 import org.dromara.common.encrypt.properties.ApiDecryptProperties;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+
 import org.springframework.boot.web.servlet.FilterRegistration;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
+import org.noear.solon.annotation.Bean;
 
 /**
  * api 解密自动配置

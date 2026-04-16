@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.dromara.common.core.utils.SpringUtils;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.context.annotation.Bean;
+import org.noear.solon.annotation.Bean;
 import org.springframework.core.task.VirtualThreadTaskExecutor;
 
 import java.util.concurrent.*;

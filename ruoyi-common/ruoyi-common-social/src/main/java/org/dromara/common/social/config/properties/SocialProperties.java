@@ -1,8 +1,8 @@
 package org.dromara.common.social.config.properties;
 
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.noear.solon.annotation.PropsSet;
+import org.noear.solon.annotation.Component;
 
 import java.util.Map;
 
@@ -13,7 +13,7 @@ import java.util.Map;
  */
 @Data
 @Component
-@ConfigurationProperties(prefix = "justauth")
+@PropsSet(prefix = "justauth")
 public class SocialProperties {
 
     /**

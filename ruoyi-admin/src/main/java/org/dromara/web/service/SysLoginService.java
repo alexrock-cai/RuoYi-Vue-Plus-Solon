@@ -32,8 +32,8 @@ import org.dromara.system.domain.bo.SysSocialBo;
 import org.dromara.system.domain.vo.*;
 import org.dromara.system.mapper.SysUserMapper;
 import org.dromara.system.service.*;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.noear.solon.annotation.Value;
+import org.noear.solon.annotation.Component;
 
 import java.time.Duration;
 import java.util.Date;

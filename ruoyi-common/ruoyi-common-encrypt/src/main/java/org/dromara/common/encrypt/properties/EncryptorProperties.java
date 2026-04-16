@@ -3,7 +3,7 @@ package org.dromara.common.encrypt.properties;
 import org.dromara.common.encrypt.enumd.AlgorithmType;
 import org.dromara.common.encrypt.enumd.EncodeType;
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.noear.solon.annotation.PropsSet;
 
 /**
  * 加解密属性配置类
@@ -12,7 +12,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @version 4.6.0
  */
 @Data
-@ConfigurationProperties(prefix = "mybatis-encryptor")
+@PropsSet(prefix = "mybatis-encryptor")
 public class EncryptorProperties {
 
     /**

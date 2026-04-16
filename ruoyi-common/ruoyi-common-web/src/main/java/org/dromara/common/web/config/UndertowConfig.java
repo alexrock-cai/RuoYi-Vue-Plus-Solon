@@ -6,7 +6,7 @@ import io.undertow.server.handlers.DisallowedMethodsHandler;
 import io.undertow.util.HttpString;
 import io.undertow.websockets.jsr.WebSocketDeploymentInfo;
 import org.dromara.common.core.utils.SpringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.inject.Inject;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory;
@@ -21,7 +21,7 @@ import org.springframework.core.task.VirtualThreadTaskExecutor;
 @AutoConfiguration
 public class UndertowConfig implements WebServerFactoryCustomizer<UndertowServletWebServerFactory> {
 
-    @Autowired
+    @Inject
     private ServerProperties serverProperties;
 
     /**

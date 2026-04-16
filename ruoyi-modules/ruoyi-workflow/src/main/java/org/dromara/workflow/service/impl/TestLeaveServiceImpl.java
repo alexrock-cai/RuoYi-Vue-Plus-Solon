@@ -5,9 +5,9 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.mybatisflex.core.query.QueryWrapper;
+
+import com.mybatisflex.core.paginate.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.common.core.domain.dto.StartProcessDTO;
@@ -31,8 +31,8 @@ import org.dromara.workflow.domain.vo.TestLeaveVo;
 import org.dromara.workflow.mapper.TestLeaveMapper;
 import org.dromara.workflow.service.ITestLeaveService;
 import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.noear.solon.annotation.Component;
+import org.noear.solon.annotation.Tran;
 
 import java.util.List;
 import java.util.Map;
@@ -78,7 +78,7 @@ public class TestLeaveServiceImpl implements ITestLeaveService {
      */
     @Override
     public TableDataInfo<TestLeaveVo> queryPageList(TestLeaveBo bo, PageQuery pageQuery) {
-        LambdaQueryWrapper<TestLeave> lqw = buildQueryWrapper(bo);
+        QueryWrapper lqw = buildQueryWrapper(bo);
         Page<TestLeaveVo> result = baseMapper.selectVoPage(pageQuery.build(), lqw);
         return TableDataInfo.build(result);
     }
@@ -88,12 +88,12 @@ public class TestLeaveServiceImpl implements ITestLeaveService {
      */
     @Override
     public List<TestLeaveVo> queryList(TestLeaveBo bo) {
-        LambdaQueryWrapper<TestLeave> lqw = buildQueryWrapper(bo);
+        QueryWrapper lqw = buildQueryWrapper(bo);
         return baseMapper.selectVoList(lqw);
     }
 
-    private LambdaQueryWrapper<TestLeave> buildQueryWrapper(TestLeaveBo bo) {
-        LambdaQueryWrapper<TestLeave> lqw = Wrappers.lambdaQuery();
+    private QueryWrapper buildQueryWrapper(TestLeaveBo bo) {
+        QueryWrapper lqw = Wrappers.lambdaQuery();
         lqw.eq(StringUtils.isNotBlank(bo.getLeaveType()), TestLeave::getLeaveType, bo.getLeaveType());
         lqw.ge(bo.getStartLeaveDays() != null, TestLeave::getLeaveDays, bo.getStartLeaveDays());
         lqw.le(bo.getEndLeaveDays() != null, TestLeave::getLeaveDays, bo.getEndLeaveDays());
@@ -121,7 +121,7 @@ public class TestLeaveServiceImpl implements ITestLeaveService {
         return MapstructUtils.convert(add, TestLeaveVo.class);
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Tran(rollbackFor = Exception.class)
     @Override
     public TestLeaveVo submitAndFlowStart(TestLeaveBo bo) {
         long day = DateUtil.betweenDay(bo.getStartDate(), bo.getEndDate(), true);
@@ -166,7 +166,7 @@ public class TestLeaveServiceImpl implements ITestLeaveService {
      * 批量删除请假
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Tran(rollbackFor = Exception.class)
     public Boolean deleteWithValidByIds(List<Long> ids) {
         workflowService.deleteInstance(StreamUtils.toList(ids, Convert::toStr));
         return baseMapper.deleteByIds(ids) > 0;

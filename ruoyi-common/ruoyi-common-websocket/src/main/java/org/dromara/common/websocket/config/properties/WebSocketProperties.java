@@ -1,14 +1,14 @@
 package org.dromara.common.websocket.config.properties;
 
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.noear.solon.annotation.PropsSet;
 
 /**
  * WebSocket 配置项
  *
  * @author zendwang
  */
-@ConfigurationProperties("websocket")
+@PropsSet("websocket")
 @Data
 public class WebSocketProperties {
 

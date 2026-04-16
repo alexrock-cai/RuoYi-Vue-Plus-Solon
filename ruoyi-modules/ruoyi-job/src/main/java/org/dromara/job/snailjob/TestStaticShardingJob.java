@@ -5,7 +5,7 @@ import com.aizuda.snailjob.client.job.core.annotation.JobExecutor;
 import com.aizuda.snailjob.client.job.core.dto.JobArgs;
 import com.aizuda.snailjob.common.log.SnailJobLog;
 import com.aizuda.snailjob.model.dto.ExecuteResult;
-import org.springframework.stereotype.Component;
+import org.noear.solon.annotation.Component;
 
 /**
  * 静态分片 根据服务端任务参数分片

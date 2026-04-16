@@ -10,7 +10,7 @@ import com.aizuda.snailjob.client.job.core.dto.MapArgs;
 import com.aizuda.snailjob.client.job.core.dto.ReduceArgs;
 import com.aizuda.snailjob.common.log.SnailJobLog;
 import com.aizuda.snailjob.model.dto.ExecuteResult;
-import org.springframework.stereotype.Component;
+import org.noear.solon.annotation.Component;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;

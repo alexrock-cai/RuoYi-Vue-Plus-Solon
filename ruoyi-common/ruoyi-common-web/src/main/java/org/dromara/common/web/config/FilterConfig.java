@@ -6,10 +6,10 @@ import org.dromara.common.web.filter.RepeatableFilter;
 import org.dromara.common.web.filter.XssFilter;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+
 import org.springframework.boot.web.servlet.FilterRegistration;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
+import org.noear.solon.annotation.Bean;
 
 /**
  * Filter配置

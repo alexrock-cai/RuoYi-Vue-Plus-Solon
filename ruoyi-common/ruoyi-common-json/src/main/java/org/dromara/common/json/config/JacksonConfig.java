@@ -11,7 +11,7 @@ import org.dromara.common.json.handler.CustomDateDeserializer;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
-import org.springframework.context.annotation.Bean;
+import org.noear.solon.annotation.Bean;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

@@ -1,7 +1,7 @@
 package org.dromara.demo.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.mybatisflex.core.query.QueryWrapper;
+
 import lombok.RequiredArgsConstructor;
 import org.dromara.common.core.utils.MapstructUtils;
 import org.dromara.common.core.utils.StringUtils;
@@ -10,7 +10,7 @@ import org.dromara.demo.domain.bo.TestTreeBo;
 import org.dromara.demo.domain.vo.TestTreeVo;
 import org.dromara.demo.mapper.TestTreeMapper;
 import org.dromara.demo.service.ITestTreeService;
-import org.springframework.stereotype.Service;
+import org.noear.solon.annotation.Component;
 
 import java.util.Collection;
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.Map;
  * @author Lion Li
  * @date 2021-07-26
  */
-// @DS("slave") // 切换从库查询
+// @UseDataSource("slave") // 切换从库查询
 @RequiredArgsConstructor
 @Service
 public class TestTreeServiceImpl implements ITestTreeService {
@@ -34,16 +34,16 @@ public class TestTreeServiceImpl implements ITestTreeService {
         return baseMapper.selectVoById(id);
     }
 
-    // @DS("slave") // 切换从库查询
+    // @UseDataSource("slave") // 切换从库查询
     @Override
     public List<TestTreeVo> queryList(TestTreeBo bo) {
-        LambdaQueryWrapper<TestTree> lqw = buildQueryWrapper(bo);
+        QueryWrapper lqw = buildQueryWrapper(bo);
         return baseMapper.selectVoList(lqw);
     }
 
-    private LambdaQueryWrapper<TestTree> buildQueryWrapper(TestTreeBo bo) {
+    private QueryWrapper buildQueryWrapper(TestTreeBo bo) {
         Map<String, Object> params = bo.getParams();
-        LambdaQueryWrapper<TestTree> lqw = Wrappers.lambdaQuery();
+        QueryWrapper lqw = Wrappers.lambdaQuery();
         lqw.eq(bo.getDeptId() != null, TestTree::getDeptId, bo.getDeptId());
         lqw.eq(bo.getUserId() != null, TestTree::getUserId, bo.getUserId());
         lqw.like(StringUtils.isNotBlank(bo.getTreeName()), TestTree::getTreeName, bo.getTreeName());

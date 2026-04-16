@@ -1,8 +1,8 @@
 package org.dromara.system.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.mybatisflex.core.query.QueryWrapper;
+
+import com.mybatisflex.core.paginate.Page;
 import lombok.RequiredArgsConstructor;
 import org.dromara.common.core.utils.MapstructUtils;
 import org.dromara.common.core.utils.ObjectUtils;
@@ -17,7 +17,7 @@ import org.dromara.system.domain.vo.SysUserVo;
 import org.dromara.system.mapper.SysNoticeMapper;
 import org.dromara.system.mapper.SysUserMapper;
 import org.dromara.system.service.ISysNoticeService;
-import org.springframework.stereotype.Service;
+import org.noear.solon.annotation.Component;
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,7 +43,7 @@ public class SysNoticeServiceImpl implements ISysNoticeService {
      */
     @Override
     public TableDataInfo<SysNoticeVo> selectPageNoticeList(SysNoticeBo notice, PageQuery pageQuery) {
-        LambdaQueryWrapper<SysNotice> lqw = buildQueryWrapper(notice);
+        QueryWrapper lqw = buildQueryWrapper(notice);
         Page<SysNoticeVo> page = baseMapper.selectVoPage(pageQuery.build(), lqw);
         return TableDataInfo.build(page);
     }
@@ -67,16 +67,16 @@ public class SysNoticeServiceImpl implements ISysNoticeService {
      */
     @Override
     public List<SysNoticeVo> selectNoticeList(SysNoticeBo notice) {
-        LambdaQueryWrapper<SysNotice> lqw = buildQueryWrapper(notice);
+        QueryWrapper lqw = buildQueryWrapper(notice);
         return baseMapper.selectVoList(lqw);
     }
 
-    private LambdaQueryWrapper<SysNotice> buildQueryWrapper(SysNoticeBo bo) {
-        LambdaQueryWrapper<SysNotice> lqw = Wrappers.lambdaQuery();
+    private QueryWrapper buildQueryWrapper(SysNoticeBo bo) {
+        QueryWrapper lqw = Wrappers.lambdaQuery();
         lqw.like(StringUtils.isNotBlank(bo.getNoticeTitle()), SysNotice::getNoticeTitle, bo.getNoticeTitle());
         lqw.eq(StringUtils.isNotBlank(bo.getNoticeType()), SysNotice::getNoticeType, bo.getNoticeType());
         if (StringUtils.isNotBlank(bo.getCreateByName())) {
-            SysUserVo sysUser = userMapper.selectVoOne(new LambdaQueryWrapper<SysUser>().eq(SysUser::getUserName, bo.getCreateByName()));
+            SysUserVo sysUser = userMapper.selectVoOne(QueryWrapper.create().eq(SysUser::getUserName, bo.getCreateByName()));
             lqw.eq(SysNotice::getCreateBy, ObjectUtils.notNullGetter(sysUser, SysUserVo::getUserId));
         }
         lqw.orderByAsc(SysNotice::getNoticeId);

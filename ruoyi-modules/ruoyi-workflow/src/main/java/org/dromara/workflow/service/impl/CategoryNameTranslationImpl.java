@@ -8,7 +8,7 @@ import org.dromara.common.translation.core.TranslationInterface;
 import org.dromara.workflow.common.ConditionalOnEnable;
 import org.dromara.workflow.common.constant.FlowConstant;
 import org.dromara.workflow.service.IFlwCategoryService;
-import org.springframework.stereotype.Service;
+import org.noear.solon.annotation.Component;
 
 /**
  * 流程分类名称翻译实现

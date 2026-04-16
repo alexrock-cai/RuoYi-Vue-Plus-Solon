@@ -4,9 +4,9 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IoUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.mybatisflex.core.query.QueryWrapper;
+
+import com.mybatisflex.core.paginate.Page;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,8 +35,8 @@ import org.dromara.workflow.domain.vo.FlowDefinitionVo;
 import org.dromara.workflow.mapper.FlwCategoryMapper;
 import org.dromara.workflow.service.IFlwCommonService;
 import org.dromara.workflow.service.IFlwDefinitionService;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.noear.solon.annotation.Component;
+import org.noear.solon.annotation.Tran;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -75,7 +75,7 @@ public class FlwDefinitionServiceImpl implements IFlwDefinitionService {
      */
     @Override
     public TableDataInfo<FlowDefinitionVo> queryList(FlowDefinition flowDefinition, PageQuery pageQuery) {
-        LambdaQueryWrapper<FlowDefinition> wrapper = buildQueryWrapper(flowDefinition);
+        QueryWrapper wrapper = buildQueryWrapper(flowDefinition);
         wrapper.eq(FlowDefinition::getIsPublish, PublishStatus.PUBLISHED.getKey());
         Page<FlowDefinition> page = flowDefinitionMapper.selectPage(pageQuery.build(), wrapper);
         List<FlowDefinitionVo> list = BeanUtil.copyToList(page.getRecords(), FlowDefinitionVo.class);
@@ -91,15 +91,15 @@ public class FlwDefinitionServiceImpl implements IFlwDefinitionService {
      */
     @Override
     public TableDataInfo<FlowDefinitionVo> unPublishList(FlowDefinition flowDefinition, PageQuery pageQuery) {
-        LambdaQueryWrapper<FlowDefinition> wrapper = buildQueryWrapper(flowDefinition);
+        QueryWrapper wrapper = buildQueryWrapper(flowDefinition);
         wrapper.in(FlowDefinition::getIsPublish, Arrays.asList(PublishStatus.UNPUBLISHED.getKey(), PublishStatus.EXPIRED.getKey()));
         Page<FlowDefinition> page = flowDefinitionMapper.selectPage(pageQuery.build(), wrapper);
         List<FlowDefinitionVo> list = BeanUtil.copyToList(page.getRecords(), FlowDefinitionVo.class);
         return new TableDataInfo<>(list, page.getTotal());
     }
 
-    private LambdaQueryWrapper<FlowDefinition> buildQueryWrapper(FlowDefinition flowDefinition) {
-        LambdaQueryWrapper<FlowDefinition> wrapper = Wrappers.lambdaQuery();
+    private QueryWrapper buildQueryWrapper(FlowDefinition flowDefinition) {
+        QueryWrapper wrapper = Wrappers.lambdaQuery();
         wrapper.like(StringUtils.isNotBlank(flowDefinition.getFlowCode()), FlowDefinition::getFlowCode, flowDefinition.getFlowCode());
         wrapper.like(StringUtils.isNotBlank(flowDefinition.getFlowName()), FlowDefinition::getFlowName, flowDefinition.getFlowName());
         if (StringUtils.isNotBlank(flowDefinition.getCategory())) {
@@ -116,9 +116,9 @@ public class FlwDefinitionServiceImpl implements IFlwDefinitionService {
      * @param id 流程定义id
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Tran(rollbackFor = Exception.class)
     public boolean publish(Long id) {
-        List<FlowNode> flowNodes = flowNodeMapper.selectList(new LambdaQueryWrapper<FlowNode>().eq(FlowNode::getDefinitionId, id));
+        List<FlowNode> flowNodes = flowNodeMapper.selectList(QueryWrapper.create().eq(FlowNode::getDefinitionId, id));
         List<String> errorMsg = new ArrayList<>();
         if (CollUtil.isNotEmpty(flowNodes)) {
             String applyNodeCode = flwCommonService.applyNodeCode(id);
@@ -140,7 +140,7 @@ public class FlwDefinitionServiceImpl implements IFlwDefinitionService {
      * @param file 文件
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Tran(rollbackFor = Exception.class)
     public boolean importJson(MultipartFile file, String category) {
         try {
             DefJson defJson = JsonUtils.parseObject(file.getBytes(), DefJson.class);
@@ -178,9 +178,9 @@ public class FlwDefinitionServiceImpl implements IFlwDefinitionService {
      * @param ids 流程定义id
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Tran(rollbackFor = Exception.class)
     public boolean removeDef(List<Long> ids) {
-        LambdaQueryWrapper<FlowHisTask> wrapper = Wrappers.lambdaQuery();
+        QueryWrapper wrapper = Wrappers.lambdaQuery();
         wrapper.in(FlowHisTask::getDefinitionId, ids);
         List<FlowHisTask> flowHisTasks = flowHisTaskMapper.selectList(wrapper);
         if (CollUtil.isNotEmpty(flowHisTasks)) {
@@ -206,9 +206,9 @@ public class FlwDefinitionServiceImpl implements IFlwDefinitionService {
      * @param tenantId 租户id
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Tran(rollbackFor = Exception.class)
     public void syncDef(String tenantId) {
-        FlowCategory flowCategory = flwCategoryMapper.selectOne(new LambdaQueryWrapper<FlowCategory>()
+        FlowCategory flowCategory = flwCategoryMapper.selectOne(QueryWrapper.create()
             .eq(FlowCategory::getTenantId, DEFAULT_TENANT_ID)
             .eq(FlowCategory::getCategoryId, FlowConstant.FLOW_CATEGORY_ID));
         flowCategory.setCategoryId(null);
@@ -220,13 +220,13 @@ public class FlwDefinitionServiceImpl implements IFlwDefinitionService {
         flowCategory.setUpdateTime(null);
         flwCategoryMapper.insert(flowCategory);
 
-        List<FlowDefinition> flowDefinitions = flowDefinitionMapper.selectList(new LambdaQueryWrapper<FlowDefinition>().eq(FlowDefinition::getTenantId, DEFAULT_TENANT_ID));
+        List<FlowDefinition> flowDefinitions = flowDefinitionMapper.selectList(QueryWrapper.create().eq(FlowDefinition::getTenantId, DEFAULT_TENANT_ID));
         if (CollUtil.isEmpty(flowDefinitions)) {
             return;
         }
         List<Long> defIds = StreamUtils.toList(flowDefinitions, FlowDefinition::getId);
-        List<FlowNode> flowNodes = flowNodeMapper.selectList(new LambdaQueryWrapper<FlowNode>().in(FlowNode::getDefinitionId, defIds));
-        List<FlowSkip> flowSkips = flowSkipMapper.selectList(new LambdaQueryWrapper<FlowSkip>().in(FlowSkip::getDefinitionId, defIds));
+        List<FlowNode> flowNodes = flowNodeMapper.selectList(QueryWrapper.create().in(FlowNode::getDefinitionId, defIds));
+        List<FlowSkip> flowSkips = flowSkipMapper.selectList(QueryWrapper.create().in(FlowSkip::getDefinitionId, defIds));
         for (FlowDefinition definition : flowDefinitions) {
             FlowDefinition flowDefinition = BeanUtil.toBean(definition, FlowDefinition.class);
             flowDefinition.setId(null);

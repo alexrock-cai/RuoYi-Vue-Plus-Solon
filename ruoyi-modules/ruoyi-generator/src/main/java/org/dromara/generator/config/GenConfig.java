@@ -1,9 +1,9 @@
 package org.dromara.generator.config;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.noear.solon.annotation.Value;
+import org.noear.solon.annotation.PropsSet;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Component;
+import org.noear.solon.annotation.Component;
 
 /**
  * 读取代码生成相关配置
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @author ruoyi
  */
 @Component
-@ConfigurationProperties(prefix = "gen")
+@PropsSet(prefix = "gen")
 @PropertySource(value = {"classpath:generator.yml"}, encoding = "UTF-8")
 public class GenConfig {
 

@@ -2,7 +2,7 @@ package org.dromara.test;
 
 import org.dromara.common.web.config.properties.CaptchaProperties;
 import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.inject.Inject;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.concurrent.TimeUnit;
@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 @DisplayName("单元测试案例")
 public class DemoUnitTest {
 
-    @Autowired
+    @Inject
     private CaptchaProperties captchaProperties;
 
     @DisplayName("测试 @SpringBootTest @Test @DisplayName 注解")

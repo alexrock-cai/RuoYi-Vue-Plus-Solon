@@ -1,14 +1,14 @@
 package org.dromara.common.encrypt.properties;
 
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.noear.solon.annotation.PropsSet;
 
 /**
  * api解密属性配置类
  * @author wdhcr
  */
 @Data
-@ConfigurationProperties(prefix = "api-decrypt")
+@PropsSet(prefix = "api-decrypt")
 public class ApiDecryptProperties {
 
     /**

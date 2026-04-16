@@ -2,10 +2,10 @@ package org.dromara.system.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.core.query.QueryWrapper;
+
+import com.mybatisflex.core.paginate.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.common.core.constant.CacheNames;
@@ -24,8 +24,8 @@ import org.dromara.system.domain.bo.SysOssConfigBo;
 import org.dromara.system.domain.vo.SysOssConfigVo;
 import org.dromara.system.mapper.SysOssConfigMapper;
 import org.dromara.system.service.ISysOssConfigService;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.noear.solon.annotation.Component;
+import org.noear.solon.annotation.Tran;
 
 import java.util.Collection;
 import java.util.List;
@@ -67,14 +67,14 @@ public class SysOssConfigServiceImpl implements ISysOssConfigService {
 
     @Override
     public TableDataInfo<SysOssConfigVo> queryPageList(SysOssConfigBo bo, PageQuery pageQuery) {
-        LambdaQueryWrapper<SysOssConfig> lqw = buildQueryWrapper(bo);
+        QueryWrapper lqw = buildQueryWrapper(bo);
         Page<SysOssConfigVo> result = baseMapper.selectVoPage(pageQuery.build(), lqw);
         return TableDataInfo.build(result);
     }
 
 
-    private LambdaQueryWrapper<SysOssConfig> buildQueryWrapper(SysOssConfigBo bo) {
-        LambdaQueryWrapper<SysOssConfig> lqw = Wrappers.lambdaQuery();
+    private QueryWrapper buildQueryWrapper(SysOssConfigBo bo) {
+        QueryWrapper lqw = Wrappers.lambdaQuery();
         lqw.eq(StringUtils.isNotBlank(bo.getConfigKey()), SysOssConfig::getConfigKey, bo.getConfigKey());
         lqw.like(StringUtils.isNotBlank(bo.getBucketName()), SysOssConfig::getBucketName, bo.getBucketName());
         lqw.eq(StringUtils.isNotBlank(bo.getStatus()), SysOssConfig::getStatus, bo.getStatus());
@@ -99,7 +99,7 @@ public class SysOssConfigServiceImpl implements ISysOssConfigService {
     public Boolean updateByBo(SysOssConfigBo bo) {
         SysOssConfig config = MapstructUtils.convert(bo, SysOssConfig.class);
         validEntityBeforeSave(config);
-        LambdaUpdateWrapper<SysOssConfig> luw = new LambdaUpdateWrapper<>();
+        QueryWrapper luw = QueryWrapper.create();
         luw.set(ObjectUtil.isNull(config.getPrefix()), SysOssConfig::getPrefix, "");
         luw.set(ObjectUtil.isNull(config.getRegion()), SysOssConfig::getRegion, "");
         luw.set(ObjectUtil.isNull(config.getExt1()), SysOssConfig::getExt1, "");
@@ -149,7 +149,7 @@ public class SysOssConfigServiceImpl implements ISysOssConfigService {
      */
     private boolean checkConfigKeyUnique(SysOssConfig sysOssConfig) {
         long ossConfigId = ObjectUtils.notNull(sysOssConfig.getOssConfigId(), -1L);
-        SysOssConfig info = baseMapper.selectOne(new LambdaQueryWrapper<SysOssConfig>()
+        SysOssConfig info = baseMapper.selectOne(QueryWrapper.create()
             .select(SysOssConfig::getOssConfigId, SysOssConfig::getConfigKey)
             .eq(SysOssConfig::getConfigKey, sysOssConfig.getConfigKey()));
         if (ObjectUtil.isNotNull(info) && info.getOssConfigId() != ossConfigId) {
@@ -162,10 +162,10 @@ public class SysOssConfigServiceImpl implements ISysOssConfigService {
      * 启用禁用状态
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Tran(rollbackFor = Exception.class)
     public int updateOssConfigStatus(SysOssConfigBo bo) {
         SysOssConfig sysOssConfig = MapstructUtils.convert(bo, SysOssConfig.class);
-        int row = baseMapper.update(null, new LambdaUpdateWrapper<SysOssConfig>()
+        int row = baseMapper.update(null, QueryWrapper.create()
             .set(SysOssConfig::getStatus, "1"));
         row += baseMapper.updateById(sysOssConfig);
         if (row > 0) {

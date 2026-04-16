@@ -7,7 +7,7 @@ import org.dromara.common.satoken.utils.LoginHelper;
 import org.dromara.system.service.ISysMenuService;
 import org.dromara.system.service.ISysPermissionService;
 import org.dromara.system.service.ISysRoleService;
-import org.springframework.stereotype.Service;
+import org.noear.solon.annotation.Component;
 
 import java.util.HashSet;
 import java.util.Set;

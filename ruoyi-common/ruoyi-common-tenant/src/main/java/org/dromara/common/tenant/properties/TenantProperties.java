@@ -1,7 +1,7 @@
 package org.dromara.common.tenant.properties;
 
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.noear.solon.annotation.PropsSet;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import java.util.List;
  * @author Lion Li
  */
 @Data
-@ConfigurationProperties(prefix = "tenant")
+@PropsSet(prefix = "tenant")
 public class TenantProperties {
 
     /**

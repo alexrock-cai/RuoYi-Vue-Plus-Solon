@@ -1,8 +1,8 @@
 package org.dromara.system.mapper;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.core.paginate.Page;
 import org.dromara.common.mybatis.annotation.DataColumn;
 import org.dromara.common.mybatis.annotation.DataPermission;
 import org.dromara.common.mybatis.core.mapper.BaseMapperPlus;
@@ -58,7 +58,7 @@ public interface SysPostMapper extends BaseMapperPlus<SysPost, SysPostVo> {
         @DataColumn(key = "userName", value = "create_by")
     })
     default long selectPostCount(List<Long> postIds) {
-        return this.selectCount(new LambdaQueryWrapper<SysPost>().in(SysPost::getPostId, postIds));
+        return this.selectCount(QueryWrapper.create().in(SysPost::getPostId, postIds));
     }
 
     /**
@@ -68,7 +68,7 @@ public interface SysPostMapper extends BaseMapperPlus<SysPost, SysPostVo> {
      * @return 岗位信息列表
      */
     default List<SysPostVo> selectPostsByUserId(Long userId) {
-        return this.selectVoList(new LambdaQueryWrapper<SysPost>()
+        return this.selectVoList(QueryWrapper.create()
             .inSql(SysPost::getPostId, "select post_id from sys_user_post where user_id = " + userId));
     }
 

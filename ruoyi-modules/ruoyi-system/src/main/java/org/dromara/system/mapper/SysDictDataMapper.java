@@ -1,6 +1,6 @@
 package org.dromara.system.mapper;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.mybatisflex.core.query.QueryWrapper;
 import org.dromara.common.mybatis.core.mapper.BaseMapperPlus;
 import org.dromara.system.domain.SysDictData;
 import org.dromara.system.domain.vo.SysDictDataVo;
@@ -22,7 +22,7 @@ public interface SysDictDataMapper extends BaseMapperPlus<SysDictData, SysDictDa
      */
     default List<SysDictDataVo> selectDictDataByType(String dictType) {
         return selectVoList(
-            new LambdaQueryWrapper<SysDictData>()
+            QueryWrapper.create()
                 .eq(SysDictData::getDictType, dictType)
                 .orderByAsc(SysDictData::getDictSort));
     }

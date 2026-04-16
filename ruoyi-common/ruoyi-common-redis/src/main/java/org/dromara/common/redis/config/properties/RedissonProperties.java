@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.redisson.config.ReadMode;
 import org.redisson.config.SubscriptionMode;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.noear.solon.annotation.PropsSet;
 
 /**
  * Redisson 配置属性
@@ -12,7 +12,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @author Lion Li
  */
 @Data
-@ConfigurationProperties(prefix = "redisson")
+@PropsSet(prefix = "redisson")
 public class RedissonProperties {
 
     /**

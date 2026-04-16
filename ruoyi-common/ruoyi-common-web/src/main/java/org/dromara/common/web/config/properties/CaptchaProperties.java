@@ -1,7 +1,7 @@
 package org.dromara.common.web.config.properties;
 
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.noear.solon.annotation.PropsSet;
 
 /**
  * 验证码 配置属性
@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @author Lion Li
  */
 @Data
-@ConfigurationProperties(prefix = "captcha")
+@PropsSet(prefix = "captcha")
 public class CaptchaProperties {
 
     private Boolean enable;

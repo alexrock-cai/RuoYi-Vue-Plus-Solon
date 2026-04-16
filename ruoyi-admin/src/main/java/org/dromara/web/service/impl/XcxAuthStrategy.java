@@ -24,7 +24,7 @@ import org.dromara.system.domain.vo.SysUserVo;
 import org.dromara.web.domain.vo.LoginVo;
 import org.dromara.web.service.IAuthStrategy;
 import org.dromara.web.service.SysLoginService;
-import org.springframework.stereotype.Service;
+import org.noear.solon.annotation.Component;
 
 /**
  * 小程序认证策略

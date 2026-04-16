@@ -2,7 +2,7 @@ package org.dromara.common.mybatis.core.page;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.http.HttpStatus;
-import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.mybatisflex.core.paginate.Page;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -58,12 +58,12 @@ public class TableDataInfo<T> implements Serializable {
     /**
      * 根据分页对象构建表格分页数据对象
      */
-    public static <T> TableDataInfo<T> build(IPage<T> page) {
+    public static <T> TableDataInfo<T> build(Page<T> page) {
         TableDataInfo<T> rspData = new TableDataInfo<>();
         rspData.setCode(HttpStatus.HTTP_OK);
         rspData.setMsg("查询成功");
         rspData.setRows(page.getRecords());
-        rspData.setTotal(page.getTotal());
+        rspData.setTotal(page.getTotalRow());
         return rspData;
     }
 
@@ -96,11 +96,11 @@ public class TableDataInfo<T> implements Serializable {
      * @param page 分页参数对象（包含当前页码、每页大小等）
      * @return 构造好的分页结果 TableDataInfo<T>
      */
-    public static <T> TableDataInfo<T> build(List<T> list, IPage<T> page) {
+    public static <T> TableDataInfo<T> build(List<T> list, Page<T> page) {
         if (CollUtil.isEmpty(list)) {
             return TableDataInfo.build();
         }
-        List<T> pageList = CollUtil.page((int) page.getCurrent() - 1, (int) page.getSize(), list);
+        List<T> pageList = CollUtil.page((int) page.getPageNumber() - 1, (int) page.getPageSize(), list);
         return new TableDataInfo<>(pageList, list.size());
     }
 
